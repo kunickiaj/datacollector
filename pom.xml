@@ -213,6 +213,9 @@
             <!-- Bower -->
             <exclude>**/.bowerrc</exclude>
 
+            <!-- Travis -->
+            <exclude>.travis.yml</exclude>
+
             <!-- Files that do not support comments, cannot have Licence header -->
             <exclude>**/META-INF/services/**</exclude>
             <exclude>sdk/src/main/services/**</exclude>

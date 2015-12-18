@@ -1,0 +1,23 @@
+language: java
+
+sudo: false
+
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk7
+  - openjdk8
+
+os:
+  - linux
+
+branches:
+  only:
+    - master
+
+before_install:
+  - git clone https://github.com/streamsets/datacollector-api.git
+  - pushd datacollector-api && mvn install -DskipTests && popd
+  - rm -rf datacollector-api
+
+script: mvn -Pdist,ui,docs clean install -Drelease -DskipTests
