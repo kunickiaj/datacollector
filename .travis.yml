@@ -11,10 +11,6 @@ jdk:
 os:
   - linux
 
-branches:
-  only:
-    - master
-
 before_install:
   - git clone https://github.com/streamsets/datacollector-api.git
   - pushd datacollector-api && mvn install -DskipTests && popd
