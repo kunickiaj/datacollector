@@ -38,6 +38,8 @@
   <properties>
     <!-- required JDK version -->
     <javaVersion>1.7</javaVersion>
+    <!-- We can still write tests using Java 8 features -->
+    <testJavaVersion>1.8</testJavaVersion>
 
     <!-- Testcases output redirection -->
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
@@ -433,6 +435,8 @@
         <configuration>
           <source>${javaVersion}</source>
           <target>${javaVersion}</target>
+          <testSource>${testJavaVersion}</testSource>
+          <testTarget>${testJavaVersion}</testTarget>
         </configuration>
       </plugin>
       <plugin>
