@@ -19,11 +19,11 @@
  */
 package com.streamsets.pipeline.lib.parser.udp;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 
 public class ParserConfig {
-  Map<ParserConfigKey, Object> configs = new HashMap<>();
+  private final Map<ParserConfigKey, Object> configs = new EnumMap<>(ParserConfigKey.class);
 
   public ParserConfig() {}
 
