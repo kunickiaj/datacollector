@@ -16,37 +16,40 @@
 package com.streamsets.pipeline.lib.parser.delimited;
 
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvRecordType;
-import com.streamsets.pipeline.api.ext.io.OverrunReader;
-import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
+import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.util.DelimitedDataConstants;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.csv.CSVFormat;
+import com.univocity.parsers.csv.CsvFormat;
+import com.univocity.parsers.csv.CsvParserSettings;
+import org.apache.commons.csv.CsvParserSettings;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class DelimitedDataParserFactory extends DataParserFactory {
 
-  public static final Map<String, Object> CONFIGS = new HashedMap() {{
-    put(DelimitedDataConstants.DELIMITER_CONFIG, '|');
-    put(DelimitedDataConstants.ESCAPE_CONFIG, '\\');
-    put(DelimitedDataConstants.QUOTE_CONFIG, '"');
-    put(DelimitedDataConstants.SKIP_START_LINES, 0);
-    put(DelimitedDataConstants.PARSE_NULL, false);
-    put(DelimitedDataConstants.NULL_CONSTANT, "\\\\N");
-    put(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG, false);
-    put(DelimitedDataConstants.COMMENT_MARKER_CONFIG, '#');
-    put(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG, true);
-  }};
+  protected static final Map<String, Object> CONFIGS = new HashMap<>();
+  static {
+    CONFIGS.put(DelimitedDataConstants.DELIMITER_CONFIG, '|');
+    CONFIGS.put(DelimitedDataConstants.ESCAPE_CONFIG, '\\');
+    CONFIGS.put(DelimitedDataConstants.QUOTE_CONFIG, '"');
+    CONFIGS.put(DelimitedDataConstants.SKIP_START_LINES, 0);
+    CONFIGS.put(DelimitedDataConstants.PARSE_NULL, false);
+    CONFIGS.put(DelimitedDataConstants.NULL_CONSTANT, "\\\\N");
+    CONFIGS.put(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG, false);
+    CONFIGS.put(DelimitedDataConstants.COMMENT_MARKER_CONFIG, '#');
+    CONFIGS.put(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG, true);
+  }
 
   public static final Set<Class<? extends Enum>> MODES =
       ImmutableSet.of((Class<? extends Enum>) CsvMode.class, CsvHeader.class, CsvRecordType.class);
@@ -68,14 +71,16 @@ public class DelimitedDataParserFactory extends DataParserFactory {
   private DataParser createParser(String id, OverrunReader reader, long offset) throws DataParserException {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
                                                          reader.getPos()));
-    CSVFormat csvFormat = getSettings().getMode(CsvMode.class).getFormat();
+    CsvParserSettings parserSettings  = new CsvParserSettings();
+    //getSettings().getMode(CsvMode.class).getFormat();
     if (getSettings().getMode(CsvMode.class) == CsvMode.CUSTOM) {
-      csvFormat = CSVFormat.DEFAULT.withDelimiter((char)getSettings().getConfig(DelimitedDataConstants.DELIMITER_CONFIG))
-                                   .withEscape((char) getSettings().getConfig(DelimitedDataConstants.ESCAPE_CONFIG))
-                                   .withQuote((char)getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG))
-                                   .withIgnoreEmptyLines((boolean)getSettings().getConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG));
+      CsvFormat format = parserSettings .getFormat();
+      format.setDelimiter(getSettings().getConfig(DelimitedDataConstants.DELIMITER_CONFIG));
+      format.setQuoteEscape(getSettings().getConfig(DelimitedDataConstants.ESCAPE_CONFIG));
+      format.setQuote(getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG));
+      parserSettings .setSkipEmptyLines(getSettings().getConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG));
       if(getSettings().getConfig(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG)) {
-        csvFormat = csvFormat.withCommentMarker((char)getSettings().getConfig(DelimitedDataConstants.COMMENT_MARKER_CONFIG));
+        settings = CsvParserSettings.withCommentMarker((char)getSettings().getConfig(DelimitedDataConstants.COMMENT_MARKER_CONFIG));
       }
     }
 
@@ -86,7 +91,7 @@ public class DelimitedDataParserFactory extends DataParserFactory {
         reader,
         offset,
         (Integer) getSettings().getConfig(DelimitedDataConstants.SKIP_START_LINES),
-        csvFormat,
+        CsvParserSettings,
         getSettings().getMode(CsvHeader.class),
         getSettings().getMaxRecordLen(),
         getSettings().getMode(CsvRecordType.class),

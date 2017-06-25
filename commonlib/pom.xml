@@ -36,7 +36,6 @@
     <avro.version>1.7.7</avro.version>
     <commons-compress.version>1.10</commons-compress.version>
     <commons-codec.version>1.9</commons-codec.version>
-    <commons-csv.version>1.4</commons-csv.version>
     <commons-io.version>2.4</commons-io.version>
     <xz.version>1.5</xz.version>
     <snappy.version>0.4</snappy.version>
@@ -73,12 +72,6 @@
       <artifactId>streamsets-datacollector-net-commonlib</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-csv</artifactId>
-      <version>${commons-csv.version}</version>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
@@ -157,7 +150,10 @@
       </exclusions>
       <optional>true</optional>
     </dependency>
-
+    <dependency>
+      <groupId>com.univocity</groupId>
+      <artifactId>univocity-parsers</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty-transport</artifactId>

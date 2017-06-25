@@ -26,7 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 
-public class TestCsvParser {
+public class TestDelimitedParser {
 
   private OverrunReader getReader(String name) throws Exception {
     InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
@@ -35,13 +35,13 @@ public class TestCsvParser {
 
   @Test
   public void testParserNoHeaders() throws Exception {
-    CsvParser parser = new CsvParser(getReader("TestCsvParser-default.csv"), CSVFormat.DEFAULT, -1);
+    DelimitedParser parser = new DelimitedParser(getReader("TestCsvParser-default.csv"), CSVFormat.DEFAULT, -1);
     Assert.assertArrayEquals(null, parser.getHeaders());
   }
 
   @Test
   public void testParserHeaders() throws Exception {
-    CsvParser parser = new CsvParser(getReader("TestCsvParser-default.csv"),
+    DelimitedParser parser = new DelimitedParser(getReader("TestCsvParser-default.csv"),
                                      CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1);
     try {
       Assert.assertArrayEquals(new String[]{"h1", "h2", "h3", "h4"}, parser.getHeaders());
@@ -52,7 +52,7 @@ public class TestCsvParser {
 
   @Test
   public void testParserRecords() throws Exception {
-    CsvParser parser = new CsvParser(getReader("TestCsvParser-default.csv"),
+    DelimitedParser parser = new DelimitedParser(getReader("TestCsvParser-default.csv"),
                                      CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1);
     try {
       Assert.assertEquals(12, parser.getReaderPosition());
@@ -76,7 +76,7 @@ public class TestCsvParser {
 
   @Test
   public void testParserRecordsFromOffset() throws Exception {
-    CsvParser parser = new CsvParser(getReader("TestCsvParser-default.csv"),
+    DelimitedParser parser = new DelimitedParser(getReader("TestCsvParser-default.csv"),
                                      CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1, 12, 0);
     try {
       Assert.assertEquals(12, parser.getReaderPosition());
@@ -96,7 +96,7 @@ public class TestCsvParser {
     } finally {
       parser.close();
     }
-    parser = new CsvParser(getReader("TestCsvParser-default.csv"),
+    parser = new DelimitedParser(getReader("TestCsvParser-default.csv"),
                                      CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(true), -1, 20, 0);
     try {
       Assert.assertEquals(20, parser.getReaderPosition());
@@ -115,7 +115,7 @@ public class TestCsvParser {
 
   @Test
   public void testMaxObjectLen() throws Exception {
-    CsvParser parser = new CsvParser(new StringReader("a,b,c\naa,bb,cc\ne,f,g\n"),
+    DelimitedParser parser = new DelimitedParser(new StringReader("a,b,c\naa,bb,cc\ne,f,g\n"),
                                      CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(false), 6);
     try {
       Assert.assertEquals(0, parser.getReaderPosition());
@@ -142,7 +142,7 @@ public class TestCsvParser {
 
   @Test
   public void testSkipLines() throws Exception {
-    CsvParser parser = new CsvParser(
+    DelimitedParser parser = new DelimitedParser(
         new CountingReader(new StringReader("foo\nbar\r\na,b,c\naa,bb,cc\ne,f,g\n")),
         CSVFormat.DEFAULT.withHeader((String[])null).withSkipHeaderRecord(false),
         -1,

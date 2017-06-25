@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvRecordType;
-import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
+import com.streamsets.pipeline.lib.csv.OverrunDelimitedParser;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
@@ -40,7 +40,7 @@ import java.util.Map;
 public class DelimitedCharDataParser extends AbstractDataParser {
   private final Stage.Context context;
   private final String readerId;
-  private final OverrunCsvParser parser;
+  private final OverrunDelimitedParser parser;
   private List<Field> headers;
   private boolean eof;
   private CsvRecordType recordType;
@@ -76,7 +76,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
       default:
         throw new RuntimeException(Utils.format("Unknown header error: {}", header));
     }
-    parser = new OverrunCsvParser(reader, format, readerOffset, skipStartLines, maxObjectLen);
+    parser = new OverrunDelimitedParser(reader, format, readerOffset, skipStartLines, maxObjectLen);
     String[] hs = parser.getHeaders();
     if (header != CsvHeader.IGNORE_HEADER && hs != null) {
       headers = new ArrayList<>();

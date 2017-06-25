@@ -24,14 +24,14 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.IOException;
 import java.io.Reader;
 
-public class OverrunCsvParser extends CsvParser {
+public class OverrunDelimitedParser extends DelimitedParser {
   private boolean overrun;
 
-  public OverrunCsvParser(Reader reader, CSVFormat format, int maxObjectLen) throws IOException {
+  public OverrunDelimitedParser(Reader reader, CSVFormat format, int maxObjectLen) throws IOException {
     this(reader, format, 0, maxObjectLen);
   }
 
-  public OverrunCsvParser(Reader reader, CSVFormat format, long initialPosition, int maxObjectLen) throws IOException {
+  public OverrunDelimitedParser(Reader reader, CSVFormat format, long initialPosition, int maxObjectLen) throws IOException {
     this(
         new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false, false),
         format,
@@ -41,7 +41,7 @@ public class OverrunCsvParser extends CsvParser {
     );
   }
 
-  public OverrunCsvParser(
+  public OverrunDelimitedParser(
       OverrunReader reader,
       CSVFormat format,
       long initialPosition,

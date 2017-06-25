@@ -33,7 +33,6 @@
   <packaging>jar</packaging>
 
   <properties>
-    <commons-csv.version>1.4</commons-csv.version>
     <commons-lang.version>3.4</commons-lang.version>
   </properties>
 
@@ -92,15 +91,13 @@
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
-      <artifactId>commons-csv</artifactId>
-      <version>${commons-csv.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>${commons-lang.version}</version>
       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.univocity</groupId>
+      <artifactId>univocity-parsers</artifactId>
     </dependency>
   </dependencies>
 

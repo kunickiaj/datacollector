@@ -62,7 +62,6 @@
     <commons-cli.version>1.2</commons-cli.version>
     <commons-codec.version>1.10</commons-codec.version>
     <commons-configuration.version>2.0</commons-configuration.version>
-    <commons-csv.version>1.4</commons-csv.version>
     <commons-el.version>1.0</commons-el.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-pool.version>2.4.1</commons-pool.version>
@@ -87,6 +86,7 @@
     <selma.version>0.13</selma.version>
     <servlet.version>3.1.0</servlet.version>
     <swagger.version>1.5.3</swagger.version>
+    <univocity.version>2.4.1</univocity.version>
   </properties>
 
   <dependencyManagement>
@@ -794,6 +794,11 @@
         <groupId>fr.xebia.extras</groupId>
         <artifactId>selma</artifactId>
         <version>${selma.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.univocity</groupId>
+        <artifactId>univocity-parsers</artifactId>
+        <version>${univocity.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

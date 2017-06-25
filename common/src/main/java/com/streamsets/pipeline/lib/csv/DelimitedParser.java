@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,9 +19,9 @@ import com.streamsets.pipeline.api.ext.io.CountingReader;
 import com.streamsets.pipeline.api.ext.io.ObjectLengthException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ExceptionUtils;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
+import com.univocity.parsers.common.record.Record;
+import com.univocity.parsers.csv.CsvParser;
+import com.univocity.parsers.csv.CsvParserSettings;
 import org.apache.commons.io.IOUtils;
 
 import java.io.Closeable;
@@ -29,55 +29,47 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.Iterator;
 
-public class CsvParser implements Closeable, AutoCloseable {
+public class DelimitedParser implements Closeable, AutoCloseable {
   private long currentPos;
   private long skipLinesPosCorrection;
-  private final CSVParser parser;
+  private final CsvParser parser;
   private final CountingReader reader;
   private final int maxObjectLen;
-  private Iterator<CSVRecord> iterator;
-  private CSVRecord nextRecord;
+  private Record nextRecord;
   private final String[] headers;
   private boolean closed;
 
-  public CsvParser(Reader reader, CSVFormat format, int maxObjectLen) throws IOException {
-    this(new CountingReader(reader), format, maxObjectLen, 0, 0);
+  public DelimitedParser(Reader reader, CsvParserSettings settings, int maxObjectLen) throws IOException {
+    this(new CountingReader(reader), settings, maxObjectLen, 0, 0);
   }
 
   @SuppressWarnings("unchecked")
-  public CsvParser(
+  public DelimitedParser(
       CountingReader reader,
-      CSVFormat format,
+      CsvParserSettings settings,
       int maxObjectLen,
-      long initialPosition,
-      int skipStartLines
+      long initialPosition
   ) throws IOException {
     Utils.checkNotNull(reader, "reader");
     Utils.checkNotNull(reader.getPos() == 0,
-                       "reader must be in position zero, the CsvParser will fast-forward to the initialPosition");
-    Utils.checkNotNull(format, "format");
+                       "reader must be in position zero, the DelimitedParser will fast-forward to the initialPosition");
+    Utils.checkNotNull(settings, "format");
     Utils.checkArgument(initialPosition >= 0, "initialPosition must be greater or equal than zero");
     Utils.checkArgument(skipStartLines >= 0, "skipStartLines must be greater or equal than zero");
     this.reader = reader;
     currentPos = initialPosition;
     this.maxObjectLen = maxObjectLen;
+
+    parser = new CsvParser(settings);
+    long skipStartLines = settings.getNumberOfRowsToSkip();
     if (initialPosition == 0) {
-      if (skipStartLines > 0) {
-        skipLinesPosCorrection = skipLines(reader, skipStartLines);
-        currentPos = skipLinesPosCorrection;
-      }
-      if (format.getSkipHeaderRecord()) {
-        format = format.withSkipHeaderRecord(false);
-        parser = new CSVParser(reader, format, 0, 0);
-        headers = read();
-      } else {
-        parser = new CSVParser(reader, format, 0, 0);
-        headers = null;
-      }
+      parser.beginParsing(reader);
+      currentPos = parser.getContext().currentChar();
+      headers = parser.parseNext();
     } else {
       if (format.getSkipHeaderRecord()) {
         format = format.withSkipHeaderRecord(false);
-        parser = new CSVParser(reader, format, 0, 0);
+        parser = new CsvParser(reader, format, 0, 0);
         headers = read();
         while (getReaderPosition() < initialPosition && read() != null) {
         }
@@ -87,38 +79,21 @@ public class CsvParser implements Closeable, AutoCloseable {
         }
       } else {
         IOUtils.skipFully(reader, initialPosition);
-        parser = new CSVParser(reader, format, initialPosition, 0);
+        parser = new CsvParser(reader, format, initialPosition, 0);
         headers = null;
       }
     }
-  }
-
-  private long skipLines(Reader reader, int lines) throws IOException {
-    int count = 0;
-    int skipped = 0;
-    while (skipped < lines) {
-      int c = reader.read();
-      if (c == -1) {
-        throw new IOException(Utils.format("Could not skip '{}' lines, reached EOF", lines));
-      }
-      // this is enough to handle \n and \r\n EOL files
-      if (c == '\n') {
-        skipped++;
-      }
-      count++;
-    }
-    return count;
   }
 
   protected Reader getReader() {
     return reader;
   }
 
-  protected CSVRecord nextRecord() throws IOException {
+  protected Record nextRecord() {
     return (iterator.hasNext()) ? iterator.next() : null;
   }
 
-  public String[] getHeaders() throws IOException {
+  public String[] getHeaders() {
     return headers;
   }
 
@@ -134,7 +109,7 @@ public class CsvParser implements Closeable, AutoCloseable {
       iterator = parser.iterator();
       nextRecord = nextRecord();
     }
-    CSVRecord record = nextRecord;
+    Record record = nextRecord;
     if (nextRecord != null) {
       nextRecord = nextRecord();
     }
@@ -149,7 +124,7 @@ public class CsvParser implements Closeable, AutoCloseable {
     return toArray(record);
   }
 
-  private String[] toArray(CSVRecord record) {
+  private String[] toArray(Record record) {
     String[] array = (record == null) ? null : new String[record.size()];
     if (array != null) {
       for (int i = 0; i < record.size(); i++) {
@@ -161,11 +136,7 @@ public class CsvParser implements Closeable, AutoCloseable {
 
   @Override
   public void close() {
-    try {
-      closed = true;
-      parser.close();
-    } catch (IOException ex) {
-      //NOP
-    }
+    closed = true;
+    parser.stopParsing();
   }
 }
