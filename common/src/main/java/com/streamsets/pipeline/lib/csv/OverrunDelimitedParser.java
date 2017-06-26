@@ -15,11 +15,8 @@
  */
 package com.streamsets.pipeline.lib.csv;
 
-import com.streamsets.pipeline.api.ext.io.OverrunException;
 import com.streamsets.pipeline.api.ext.io.OverrunReader;
-import com.streamsets.pipeline.lib.util.ExceptionUtils;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
+import com.univocity.parsers.csv.CsvParserSettings;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -27,53 +24,27 @@ import java.io.Reader;
 public class OverrunDelimitedParser extends DelimitedParser {
   private boolean overrun;
 
-  public OverrunDelimitedParser(Reader reader, CSVFormat format, int maxObjectLen) throws IOException {
-    this(reader, format, 0, maxObjectLen);
+  public OverrunDelimitedParser(Reader reader, CsvParserSettings settings, int maxObjectLen) throws IOException {
+    this(reader, settings, 0, maxObjectLen);
   }
 
-  public OverrunDelimitedParser(Reader reader, CSVFormat format, long initialPosition, int maxObjectLen) throws IOException {
+  public OverrunDelimitedParser(Reader reader, CsvParserSettings settings, long initialPosition, int maxObjectLen) throws IOException {
     this(
         new OverrunReader(reader, OverrunReader.getDefaultReadLimit(), false, false),
-        format,
+        settings,
         initialPosition,
-        0,
         maxObjectLen
     );
   }
 
   public OverrunDelimitedParser(
       OverrunReader reader,
-      CSVFormat format,
+      CsvParserSettings settings,
       long initialPosition,
-      int skipStartLines,
       int maxObjectLen
   ) throws IOException {
-    super(reader, format, maxObjectLen, initialPosition, skipStartLines);
+    super(reader, settings, maxObjectLen, initialPosition);
     OverrunReader countingReader = (OverrunReader) getReader();
     countingReader.setEnabled(true);
   }
-
-  @Override
-  protected CSVRecord nextRecord() throws IOException {
-    if (overrun) {
-      throw new IOException("The parser is unusable, the underlying reader had an overrun");
-    }
-    ((OverrunReader)getReader()).resetCount();
-    return super.nextRecord();
-  }
-
-  @Override
-  public String[] read() throws IOException {
-    try {
-      return super.read();
-    } catch (RuntimeException ex) {
-      OverrunException oex = ExceptionUtils.findSpecificCause(ex, OverrunException.class);
-      if (oex != null) {
-        overrun = true;
-        throw oex;
-      }
-      throw ex;
-    }
-  }
-
 }

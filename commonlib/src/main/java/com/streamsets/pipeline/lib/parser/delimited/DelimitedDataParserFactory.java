@@ -72,7 +72,6 @@ public class DelimitedDataParserFactory extends DataParserFactory {
     Utils.checkState(reader.getPos() == 0, Utils.formatL("reader must be in position '0', it is at '{}'",
                                                          reader.getPos()));
     CsvParserSettings parserSettings  = new CsvParserSettings();
-    //getSettings().getMode(CsvMode.class).getFormat();
     if (getSettings().getMode(CsvMode.class) == CsvMode.CUSTOM) {
       CsvFormat format = parserSettings .getFormat();
       format.setDelimiter(getSettings().getConfig(DelimitedDataConstants.DELIMITER_CONFIG));
@@ -80,8 +79,20 @@ public class DelimitedDataParserFactory extends DataParserFactory {
       format.setQuote(getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG));
       parserSettings .setSkipEmptyLines(getSettings().getConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG));
       if(getSettings().getConfig(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG)) {
-        settings = CsvParserSettings.withCommentMarker((char)getSettings().getConfig(DelimitedDataConstants.COMMENT_MARKER_CONFIG));
+        format.setComment(getSettings().getConfig(DelimitedDataConstants.COMMENT_MARKER_CONFIG));
+        parserSettings.setCommentCollectionEnabled(true);
       }
+    }
+
+    long skipLines = Long.parseLong(getSettings().getConfig(DelimitedDataConstants.SKIP_START_LINES));
+
+    CsvHeader headerMode = getSettings().getMode(CsvHeader.class);
+    parserSettings.setHeaderExtractionEnabled(false);
+    
+    if (CsvHeader.WITH_HEADER.equals(headerMode) && offset == 0) {
+      parserSettings.setHeaderExtractionEnabled(true);
+    } else if (CsvHeader.IGNORE_HEADER.equals(headerMode)) {
+      parserSettings.setNumberOfRowsToSkip(++skipLines);
     }
 
     try {
@@ -90,9 +101,7 @@ public class DelimitedDataParserFactory extends DataParserFactory {
         id,
         reader,
         offset,
-        (Integer) getSettings().getConfig(DelimitedDataConstants.SKIP_START_LINES),
-        CsvParserSettings,
-        getSettings().getMode(CsvHeader.class),
+        parserSettings,
         getSettings().getMaxRecordLen(),
         getSettings().getMode(CsvRecordType.class),
         (Boolean) getSettings().getConfig(DelimitedDataConstants.PARSE_NULL),

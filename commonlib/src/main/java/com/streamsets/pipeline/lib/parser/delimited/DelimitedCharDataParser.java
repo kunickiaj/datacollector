@@ -21,21 +21,23 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.io.OverrunReader;
-import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.csv.OverrunDelimitedParser;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
-import org.apache.commons.csv.CSVFormat;
+import com.univocity.parsers.common.ParsingContext;
+import com.univocity.parsers.common.processor.RowProcessor;
+import com.univocity.parsers.csv.CsvParserSettings;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DelimitedCharDataParser extends AbstractDataParser {
   private final Stage.Context context;
@@ -51,46 +53,25 @@ public class DelimitedCharDataParser extends AbstractDataParser {
       String readerId,
       OverrunReader reader,
       long readerOffset,
-      int skipStartLines,
-      CSVFormat format,
-      CsvHeader header,
+      CsvParserSettings settings,
       int maxObjectLen,
       CsvRecordType recordType,
       boolean parseNull,
-      String nullConstant)
+      String nullConstant
+  )
     throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.recordType = recordType;
     this.nullConstant = parseNull ? nullConstant : null;
-    switch (header) {
-      case WITH_HEADER:
-        format = format.withHeader((String[])null).withSkipHeaderRecord(true);
-        break;
-      case IGNORE_HEADER:
-        format = format.withHeader((String[])null).withSkipHeaderRecord(true);
-        break;
-      case NO_HEADER:
-        format = format.withHeader((String[])null).withSkipHeaderRecord(false);
-        break;
-      default:
-        throw new RuntimeException(Utils.format("Unknown header error: {}", header));
-    }
-    parser = new OverrunDelimitedParser(reader, format, readerOffset, skipStartLines, maxObjectLen);
-    String[] hs = parser.getHeaders();
-    if (header != CsvHeader.IGNORE_HEADER && hs != null) {
-      headers = new ArrayList<>();
-      for (String h : hs) {
-        headers.add(Field.create(h));
-      }
-    }
+    parser = new OverrunDelimitedParser(reader, settings, readerOffset, maxObjectLen);
   }
 
   @Override
   public Record parse() throws IOException, DataParserException {
     Record record = null;
     long offset = parser.getReaderPosition();
-    String[] columns = parser.read();
+    String[] columns = parser.
     if (columns != null) {
       record = createRecord(offset, columns);
     } else {
@@ -99,68 +80,80 @@ public class DelimitedCharDataParser extends AbstractDataParser {
     return record;
   }
 
-  protected Record createRecord(long offset, String[] columns) throws DataParserException {
-    Record record = context.createRecord(readerId + "::" + offset);
 
-    // In case that the number of columns does not equal the number of expected columns from header, report the
-    // parsing error as recoverable issue - it's safe to continue reading the stream.
-    if(headers != null && columns.length > headers.size()) {
-      record.set(Field.create(Field.Type.MAP, ImmutableMap.builder()
-        .put("columns", getListField(columns))
-        .put("headers", Field.create(Field.Type.LIST, headers))
-        .build()
-      ));
+  class DelimitedRowProcessor implements RowProcessor {
 
-      throw new RecoverableDataParserException(record, Errors.DELIMITED_PARSER_01, offset, columns.length, headers.size());
+    private final Stage.Context stageContext;
+    private Record currentRecord;
+
+    public DelimitedRowProcessor(Stage.Context stageContext) {
+      this.stageContext = stageContext;
     }
 
-    if(recordType == CsvRecordType.LIST) {
-      List<Field> row = new ArrayList<>();
-      for (int i = 0; i < columns.length; i++) {
-        Map<String, Field> cell = new HashMap<>();
-        Field header = (headers != null) ? headers.get(i) : null;
-        if (header != null) {
-          cell.put("header", header);
-        }
-        Field value = getField(columns[i]);
-        cell.put("value", value);
-        row.add(Field.create(cell));
-      }
-      record.set(Field.create(row));
-    } else {
-      LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
-      for (int i = 0; i < columns.length; i++) {
-        String key;
-        Field header = (headers != null) ? headers.get(i) : null;
-        if(header != null) {
-          key = header.getValueAsString();
-        } else {
-          key = i + "";
-        }
-        listMap.put(key, getField(columns[i]));
-      }
-      record.set(Field.createListMap(listMap));
+    public final Record getCurrentRecord() {
+      return this.currentRecord;
     }
 
-    return record;
+    @Override
+    public void processStarted(ParsingContext context) {
+
+    }
+
+    @Override
+    public void rowProcessed(String[] row, ParsingContext context) {
+      Record record = stageContext.createRecord(readerId + "::" + context.currentChar());
+
+      headers = Arrays.stream(context.headers()).map(Field::create).collect(Collectors.toList());
+      if(recordType == CsvRecordType.LIST) {
+        List<Field> root = new ArrayList<>();
+        for (int i = 0; i < row.length; i++) {
+          Map<String, Field> cell = new HashMap<>();
+          Field header = headers.get(i);
+          if (header != null) {
+            cell.put("header", header);
+          }
+          Field value = getField(row[i]);
+          cell.put("value", value);
+          root.add(Field.create(cell));
+        }
+        record.set(Field.create(root));
+      } else {
+        LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
+        for (int i = 0; i < row.length; i++) {
+          String key;
+          Field header = headers.get(i);
+          if(header != null) {
+            key = header.getValueAsString();
+          } else {
+            key = Integer.toString(i);
+          }
+          listMap.put(key, getField(row[i]));
+        }
+        record.set(Field.createListMap(listMap));
+      }
+
+      currentRecord = record;
+    }
+
+    @Override
+    public void processEnded(ParsingContext context) {
+    }
+
+    private Field getField(String value) {
+      if(nullConstant != null && nullConstant.equals(value)) {
+        return Field.create(Field.Type.STRING, null);
+      }
+
+      return Field.create(Field.Type.STRING, value);
+    }
   }
 
   private Field getListField(String ...values) {
-    ImmutableList.Builder listBuilder = ImmutableList.builder();
+    ImmutableList.Builder<Field> listBuilder = ImmutableList.builder();
 
-    for(String value : values) {
-      listBuilder.add(Field.create(Field.Type.STRING, value));
-    }
+    Arrays.stream(values).forEach(v -> listBuilder.add(Field.create(Field.Type.STRING, v)));
 
     return Field.create(Field.Type.LIST, listBuilder.build());
-  }
-
-  private Field getField(String value) {
-    if(nullConstant != null && nullConstant.equals(value)) {
-      return Field.create(Field.Type.STRING, null);
-    }
-
-    return Field.create(Field.Type.STRING, value);
   }
 
   @Override
