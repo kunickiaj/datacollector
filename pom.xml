@@ -65,6 +65,7 @@
          for every stage library here with the directory name as value
     -->
 
+    <apache-kafka-0_11_0-lib>apache-kafka_0_11_0-lib</apache-kafka-0_11_0-lib>
     <aws-lib>aws-lib</aws-lib>
     <basic-lib>basic-lib</basic-lib>
     <bigtable-lib>bigtable-lib</bigtable-lib>
@@ -194,13 +195,14 @@
     <module>spark-processor-protolib</module>
 
     <!--
-         Stage libraries that always built with the data collector (they dont have protolibs)
+         Stage libraries that always built with the data collector (they don't have protolibs)
 
          IMPORTANT: keep this in alphabetical order
 
          IMPORTANT: define a property matching the module directory name
          for every stage library here with the directory name as value
     -->
+    <module>apache-kafka_0_11_0-lib</module>
     <module>aws-lib</module>
     <module>azure-lib</module>
     <module>basic-lib</module>
