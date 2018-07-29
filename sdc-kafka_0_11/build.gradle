@@ -31,8 +31,15 @@ exclude(module: 'apacheds-jdbm1')
     compileOnly group: 'org.apache.zookeeper', name: 'zookeeper', version:'3.4.5'
 }
 
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
 task packageTests(type: Jar) {
   from sourceSets.test.output
   classifier = 'tests'
 }
-artifacts.archives packageTests
+
+artifacts {
+  testArtifacts packageTests
+}

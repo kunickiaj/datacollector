@@ -22,8 +22,15 @@ exclude(module: 'javassist')
     compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'
 }
 
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
 task packageTests(type: Jar) {
   from sourceSets.test.output
   classifier = 'tests'
 }
-artifacts.archives packageTests
+
+artifacts {
+  testArtifacts packageTests
+}

@@ -40,8 +40,15 @@ exclude(module: 'apacheds-jdbm1')
   providedCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-sdk')
 }
 
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
 task packageTests(type: Jar) {
   from sourceSets.test.output
   classifier = 'tests'
 }
-artifacts.archives packageTests
+
+artifacts {
+  testArtifacts packageTests
+}

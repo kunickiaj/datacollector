@@ -14,8 +14,15 @@ dependencies {
     compileOnly group: 'org.apache.solr', name: 'solr-solrj', version:'4.4.0-cdh5.2.8'
 }
 
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
 task packageTests(type: Jar) {
   from sourceSets.test.output
   classifier = 'tests'
 }
-artifacts.archives packageTests
+
+artifacts {
+  testArtifacts packageTests
+}

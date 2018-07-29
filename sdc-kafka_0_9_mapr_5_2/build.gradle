@@ -15,8 +15,15 @@ dependencies {
     compileOnly group: 'org.apache.kafka', name: 'kafka-clients', version:'0.9.0.0-mapr-1801-streams-5.2.0'
 }
 
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
 task packageTests(type: Jar) {
   from sourceSets.test.output
   classifier = 'tests'
 }
-artifacts.archives packageTests
+
+artifacts {
+  testArtifacts packageTests
+}

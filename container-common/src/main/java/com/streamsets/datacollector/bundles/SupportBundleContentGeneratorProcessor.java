@@ -18,6 +18,8 @@ package com.streamsets.datacollector.bundles;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
@@ -33,6 +35,7 @@ import java.util.Set;
  * and processed by the SupportBundleManager.
  */
 @SupportedAnnotationTypes({"com.streamsets.datacollector.bundles.BundleContentGeneratorDef"})
+@SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class SupportBundleContentGeneratorProcessor extends AbstractProcessor {
 
   public static final String RESOURCE_NAME = "support-bundle-list";

@@ -27,8 +27,11 @@ dependencies {
   compile group: 'org.apache.poi', name: 'poi', version: '3.17'
   compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
   testCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-net-commonlib')
+  testCompile project(path: ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-net-commonlib', configuration: 'testArtifacts')
   testCompile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.9'
   testCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-stagesupport')
+  testCompile project(path: ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-stagesupport', configuration: 'testArtifacts')
+  testCompile project(path: ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-guavasupport', configuration: 'testArtifacts')
   testCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-sdk')
 
   testCompile group: 'org.hamcrest', name: 'hamcrest-core', version: '1.3'
@@ -39,8 +42,15 @@ dependencies {
   compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
 }
 
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
 task packageTests(type: Jar) {
   from sourceSets.test.output
   classifier = 'tests'
 }
-artifacts.archives packageTests
+
+artifacts {
+  testArtifacts packageTests
+}

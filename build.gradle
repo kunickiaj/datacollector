@@ -1,4 +1,4 @@
-allprojects  {
+allprojects {
   apply plugin: 'maven'
 
   group = 'com.streamsets'
@@ -8,21 +8,7 @@ allprojects  {
   plugins.withType(JavaPlugin) {
     dependencies {
       testCompile 'junit:junit:4.12'
-    }
-  }
-}
-
-subprojects {
-  apply plugin: 'java'
-  apply plugin: 'war'
-  apply plugin: 'scala'
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
-
-  // The current annotation processor expects a slightly different configuration, as determined by the maven resources plugin
-  sourceSets {
-    main {
-      output.resourcesDir = "$buildDir/classes/java/$name"
+      testCompile 'org.mockito:mockito-core:1.10.19'
     }
   }
 
@@ -42,5 +28,99 @@ subprojects {
     maven { url "http://files.kinetica.com/nexus/content/repositories/releases/" }
     maven { url "http://repository.mapr.com/nexus/content/repositories/releases" }
 //    maven { url "http://bits.cloudera.com/f93c6c9d/cdh6/6.0.0-beta1/maven-repository/" }
+  }
+}
+
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'war'
+  apply plugin: 'scala'
+  apply plugin: 'java-library-distribution'
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  // The current annotation processor expects a slightly different configuration, as determined by the maven resources plugin
+  sourceSets {
+    main {
+      output.resourcesDir = "$buildDir/classes/java/$name"
+    }
+  }
+}
+
+apply plugin: 'java'
+
+configurations {
+  api
+  cli
+  container
+  rootClasspath
+}
+
+dependencies {
+  rootClasspath "org.xerial.snappy:snappy-java:1.0.5"
+  api(
+      "com.streamsets:streamsets-datacollector-api:$version",
+      "org.slf4j:jul-to-slf4j:1.7.7"
+  )
+}
+
+apply plugin: 'distribution'
+
+distributions {
+  core {
+    baseName = 'streamsets-datacollector-core'
+    contents {
+      // Can be refactored later
+      from('dist/src/main') {
+        include "etc/**"
+        include "bin/**"
+        include "libexec/**"
+      }
+      // Default logging configuration
+      into('etc') {
+        from 'container/src/main/resources/sdc-log4j.properties-default'
+        rename 'sdc-log4j.properties-default', 'sdc-log4j.properties'
+      }
+      // Empty directories
+      into('') {
+        File.createTempDir().with {
+          ['data', 'libs-common-lib', 'log', 'resources'].forEach { dir ->
+            def file = new File(absolutePath, dir)
+            file.mkdirs()
+          }
+          from(absolutePath) {
+            includeEmptyDirs = true
+          }
+        }
+      }
+      into('api-lib') {
+        from configurations.api
+      }
+      into('cli-lib') {
+        from 'cli/build/libs'
+      }
+      into('root-lib') {
+        from configurations.rootClasspath
+      }
+      // The UI
+      into('sdc-static-web') {
+        from('datacollector-ui/target/dist') {
+          exclude "karma-conf.js"
+          exclude "app/**"
+          exclude "bower_components"
+        }
+      }
+      // TODO: include docs
+      // Extract any libs we want to include in the core tarball
+      into('streamsets-libs') {
+        // TODO: add basic lib
+        // TODO: add data formats lib
+        // TODO: add dev lib
+        // TODO: add stats lib
+        // TODO: add windows lib
+        from zipTree('aws-lib/build/distributions/streamsets-datacollector-aws-lib-3.5.0-SNAPSHOT.zip')
+      }
+    }
   }
 }

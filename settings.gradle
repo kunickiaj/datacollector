@@ -1,4 +1,6 @@
 rootProject.name = 'streamsets-datacollector'
+enableFeaturePreview("IMPROVED_POM_SUPPORT") // enables BOM support
+
 include ':streamsets-datacollector-root-proto'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-testing'
@@ -80,6 +82,9 @@ include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-wholefile-converter-protolib'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-pulsar-protolib'
 
+// Stage Libraries
+include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-aws-lib'
+
 project(':streamsets-datacollector-root-proto').projectDir = "$rootDir/root-proto" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root').projectDir = "$rootDir/root" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-testing').projectDir = "$rootDir/testing" as File
@@ -160,3 +165,6 @@ project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-scripting-protolib').projectDir = "$rootDir/scripting-protolib" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-wholefile-converter-protolib').projectDir = "$rootDir/wholefile-converter-protolib" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-pulsar-protolib').projectDir = "$rootDir/pulsar-protolib" as File
+
+// Stage Libraries
+project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-aws-lib').projectDir = "$rootDir/aws-lib" as File

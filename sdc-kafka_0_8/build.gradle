@@ -20,8 +20,15 @@ dependencies {
     compileOnly group: 'org.apache.kafka', name: 'kafka_2.10', version:'0.8.1.1'
 }
 
+configurations {
+  testArtifacts.extendsFrom testRuntime
+}
+
 task packageTests(type: Jar) {
   from sourceSets.test.output
   classifier = 'tests'
 }
-artifacts.archives packageTests
+
+artifacts {
+  testArtifacts packageTests
+}
