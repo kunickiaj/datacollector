@@ -1,0 +1,31 @@
+
+description = 'StreamSets Data Collector Cluster Kafka ProtoLib'
+dependencies {
+  compile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-common')
+  compile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-commonlib')
+    compile group: 'io.confluent', name: 'kafka-schema-registry-client', version:'3.0.1'
+  compile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-cluster-common')
+    compile group: 'org.apache.zookeeper', name: 'zookeeper', version:'3.4.5-cdh5.9.2'
+  compile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-kafka_source-protolib')
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+    testCompile group: 'org.mockito', name: 'mockito-core', version:'1.10.19'
+    testCompile(group: 'org.apache.kafka', name: 'kafka_2.11', version:'0.10.0.0') {
+exclude(module: 'zookeeper')
+    }
+    testCompile(group: 'org.apache.kafka', name: 'kafka_2.11', version:'0.10.0.0', classifier:'test') {
+exclude(module: 'zookeeper')
+    }
+    testCompile group: 'org.apache.kafka', name: 'kafka-clients', version:'0.10.0.0', classifier:'test'
+  testCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-kafka-common')
+  testCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-sdc-kafka-10')
+  testCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-sdc-kafka-10')
+    testCompile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version:'1.57'
+    testCompile group: 'com.h2database', name: 'h2', version:'1.4.187'
+    compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version:'3.5.0-SNAPSHOT'
+    compileOnly group: 'log4j', name: 'log4j', version:'1.2.17'
+    compileOnly group: 'org.slf4j', name: 'slf4j-api', version:'1.7.7'
+    compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'
+    compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version:'3.1.2'
+  providedCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-sdk')
+  providedCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-cluster-bootstrap-api')
+}

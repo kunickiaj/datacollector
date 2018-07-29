@@ -1,0 +1,23 @@
+
+description = 'StreamSets Data Collector network common lib'
+dependencies {
+  compile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-common')
+    compile group: 'io.netty', name: 'netty-codec', version:'4.1.16.Final'
+    compile group: 'com.google.guava', name: 'guava', version:'20.0'
+  testCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-sdk')
+    testCompile group: 'commons-io', name: 'commons-io', version:'2.4'
+    testCompile group: 'org.apache.commons', name: 'commons-lang3', version:'3.4'
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+    testCompile group: 'org.hamcrest', name: 'hamcrest-core', version:'1.3'
+    testCompile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version:'1.57'
+    testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version:'3.5.0-SNAPSHOT'
+    testCompile group: 'com.streamsets', name: 'streamsets-testing', version:'3.5.0-SNAPSHOT'
+    testCompile group: 'com.streamsets', name: 'streamsets-datacollector-stagesupport', version:'3.5.0-SNAPSHOT'
+    compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version:'3.5.0-SNAPSHOT'
+}
+
+task packageTests(type: Jar) {
+  from sourceSets.test.output
+  classifier = 'tests'
+}
+artifacts.archives packageTests

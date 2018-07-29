@@ -1,0 +1,46 @@
+allprojects  {
+  apply plugin: 'maven'
+
+  group = 'com.streamsets'
+  version = '3.5.0-SNAPSHOT'
+
+  // Add JUnit to test scope for ll projects using the Java plugin
+  plugins.withType(JavaPlugin) {
+    dependencies {
+      testCompile 'junit:junit:4.12'
+    }
+  }
+}
+
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'war'
+  apply plugin: 'scala'
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  // The current annotation processor expects a slightly different configuration, as determined by the maven resources plugin
+  sourceSets {
+    main {
+      output.resourcesDir = "$buildDir/classes/java/$name"
+    }
+  }
+
+  repositories {
+    mavenLocal()
+
+    maven { url "https://repo.streamsets.net/artifactory/libs-release" }
+    maven { url "https://repo.streamsets.net/artifactory/libs-snapshot" }
+    maven { url "https://repository.cloudera.com/content/groups/cloudera-repos" }
+    maven { url "http://packages.confluent.io/maven/" }
+    maven { url "https://artifacts.elastic.co/maven" }
+    maven { url "http://repository.mapr.com/maven/" }
+    maven { url "http://repo.hortonworks.com/content/repositories/releases/" }
+    maven { url "http://repo.hortonworks.com/content/repositories/re-hosted/" }
+    maven { url "http://repo.hortonworks.com/content/repositories/jetty-hadoop/" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "http://files.kinetica.com/nexus/content/repositories/releases/" }
+    maven { url "http://repository.mapr.com/nexus/content/repositories/releases" }
+//    maven { url "http://bits.cloudera.com/f93c6c9d/cdh6/6.0.0-beta1/maven-repository/" }
+  }
+}
