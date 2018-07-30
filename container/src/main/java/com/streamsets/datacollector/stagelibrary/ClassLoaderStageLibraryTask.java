@@ -652,7 +652,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     Set<Class> duplicates = new HashSet<>();
     for(ServiceDefinition def: services) {
       if(duplicates.contains(def.getProvides())) {
-        errors.add(Utils.format("Service {} have multiple implementations.", def.getProvides()));
+        errors.add(Utils.format("Service {} has multiple implementations.", def.getProvides()));
       }
 
       duplicates.add(def.getProvides());

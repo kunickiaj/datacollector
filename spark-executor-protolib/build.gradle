@@ -14,8 +14,8 @@ exclude(module: 'javassist')
     testCompile group: 'org.glassfish.jersey.test-framework.providers', name: 'jersey-test-framework-provider-grizzly2', version:'2.25.1'
     compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version:'3.5.0-SNAPSHOT'
     compileOnly group: 'org.apache.spark', name: 'spark-launcher_2.11', version:'2.1.0.cloudera1'
-  providedCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-sdk')
-  providedCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-commonlib')
+  testCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-sdk')
+  compileOnly project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-commonlib')
     compileOnly group: 'org.slf4j', name: 'jul-to-slf4j', version:'1.7.7'
     compileOnly group: 'log4j', name: 'log4j', version:'1.2.17'
     compileOnly group: 'org.slf4j', name: 'slf4j-api', version:'1.7.7'

@@ -33,7 +33,6 @@ allprojects {
 
 subprojects {
   apply plugin: 'java'
-  apply plugin: 'war'
   apply plugin: 'scala'
   apply plugin: 'java-library-distribution'
 
@@ -41,18 +40,20 @@ subprojects {
   targetCompatibility = 1.8
 
   // The current annotation processor expects a slightly different configuration, as determined by the maven resources plugin
-  sourceSets {
-    main {
-      output.resourcesDir = "$buildDir/classes/java/$name"
-    }
-  }
+//  sourceSets {
+//    main {
+//      output.resourcesDir = "$buildDir/classes/java/$name"
+//    }
+//    test {
+//      output.resourcesDir = "$buildDir/classes/java/$name"
+//    }
+//  }
 }
 
 apply plugin: 'java'
 
 configurations {
   api
-  cli
   container
   rootClasspath
 }
@@ -63,19 +64,39 @@ dependencies {
       "com.streamsets:streamsets-datacollector-api:$version",
       "org.slf4j:jul-to-slf4j:1.7.7"
   )
+  container(
+      project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-container'),
+      project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-container-common'),
+  )
 }
 
 apply plugin: 'distribution'
+// for Ant filter
+import org.apache.tools.ant.filters.ReplaceTokens
 
 distributions {
   core {
     baseName = 'streamsets-datacollector-core'
     contents {
       // Can be refactored later
-      from('dist/src/main') {
-        include "etc/**"
-        include "bin/**"
-        include "libexec/**"
+      into('') {
+        from('dist/src/main') {
+          include "etc/**"
+          eachFile { file ->
+            println file.name
+            if (file.name.contains("password") || file.name.contains("realm")) {
+              file.setMode(0600)
+            }
+          }
+        }
+      }
+      into('') {
+        from('dist/src/main') {
+          include "bin/**"
+          include "libexec/**"
+          filter(ReplaceTokens, tokens: ['project.version': project.property("version")])
+        }
+        fileMode = 0755
       }
       // Default logging configuration
       into('etc') {
@@ -85,7 +106,7 @@ distributions {
       // Empty directories
       into('') {
         File.createTempDir().with {
-          ['data', 'libs-common-lib', 'log', 'resources'].forEach { dir ->
+          ['data', 'libs-common-lib', 'log', 'resources', 'streamsets-libs-extras', 'user-libs'].forEach { dir ->
             def file = new File(absolutePath, dir)
             file.mkdirs()
           }
@@ -97,8 +118,14 @@ distributions {
       into('api-lib') {
         from configurations.api
       }
+      into('libexec/bootstrap-libs/main') {
+        from 'bootstrap/build/libs'
+      }
       into('cli-lib') {
         from 'cli/build/libs'
+      }
+      into('container-lib') {
+        from configurations.container
       }
       into('root-lib') {
         from configurations.rootClasspath
@@ -106,19 +133,19 @@ distributions {
       // The UI
       into('sdc-static-web') {
         from('datacollector-ui/target/dist') {
-          exclude "karma-conf.js"
-          exclude "app/**"
-          exclude "bower_components"
+//          exclude "karma-conf.js"
+//          exclude "app/**"
+//          exclude "bower_components"
         }
       }
       // TODO: include docs
       // Extract any libs we want to include in the core tarball
       into('streamsets-libs') {
         // TODO: add basic lib
-        // TODO: add data formats lib
         // TODO: add dev lib
         // TODO: add stats lib
         // TODO: add windows lib
+        from zipTree('dataformats-lib/build/distributions/streamsets-datacollector-dataformats-lib-3.5.0-SNAPSHOT.zip')
         from zipTree('aws-lib/build/distributions/streamsets-datacollector-aws-lib-3.5.0-SNAPSHOT.zip')
       }
     }

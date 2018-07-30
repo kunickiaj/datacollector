@@ -5,3 +5,9 @@ dependencies {
     testCompile group: 'com.google.guava', name: 'guava', version:'18.0'
   testCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-testing')
 }
+
+jar {
+  manifest {
+    attributes("Premain-Class": "com.streamsets.pipeline.BootstrapMain")
+  }
+}

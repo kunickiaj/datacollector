@@ -81,7 +81,7 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdk</artifactId>
-      <scope>provided</scope>
+      <scope>test</scope>
     </dependency>
 
     <!-- Compile Dependencies -->

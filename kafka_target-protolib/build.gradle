@@ -30,5 +30,5 @@ dependencies {
     compileOnly group: 'org.slf4j', name: 'slf4j-api', version:'1.7.7'
     compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'
     compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version:'3.1.2'
-  providedCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-sdk')
+  testCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-sdk')
 }

@@ -9,6 +9,7 @@ include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:stre
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-sso'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-common'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-container-common'
+include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-dataformats-lib'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-google-common'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-json-dto'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-messaging-client'
@@ -93,6 +94,7 @@ project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:stre
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-sso').projectDir = "$rootDir/sso" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-common').projectDir = "$rootDir/common" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-container-common').projectDir = "$rootDir/container-common" as File
+project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-dataformats-lib').projectDir = "$rootDir/dataformats-lib" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-google-common').projectDir = "$rootDir/google-common" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-json-dto').projectDir = "$rootDir/json-dto" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-messaging-client').projectDir = "$rootDir/messaging-client" as File
