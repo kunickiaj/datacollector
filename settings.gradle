@@ -9,14 +9,13 @@ include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:stre
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-sso'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-common'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-container-common'
-include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-dataformats-lib'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-google-common'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-json-dto'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-messaging-client'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-container'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-miniSDC'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-sdk'
-// include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-hadoop-common'
+ include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-hadoop-common'
 // include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-mapr-common'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-stagesupport'
@@ -25,7 +24,7 @@ include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-httpcommonlib'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-net-commonlib'
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-lookup-protolib'
-// include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-hdfs-protolib'
+ include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-hdfs-protolib'
 // include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-mapreduce-protolib'
 // include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-maprfs-protolib'
 // include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-maprdb-protolib'
@@ -85,6 +84,8 @@ include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:
 
 // Stage Libraries
 include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-aws-lib'
+include ':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-basic-lib'
+include ':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-dataformats-lib'
 
 project(':streamsets-datacollector-root-proto').projectDir = "$rootDir/root-proto" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root').projectDir = "$rootDir/root" as File
@@ -94,14 +95,13 @@ project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:stre
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-sso').projectDir = "$rootDir/sso" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-common').projectDir = "$rootDir/common" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-container-common').projectDir = "$rootDir/container-common" as File
-project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-dataformats-lib').projectDir = "$rootDir/dataformats-lib" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-google-common').projectDir = "$rootDir/google-common" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-json-dto').projectDir = "$rootDir/json-dto" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-messaging-client').projectDir = "$rootDir/messaging-client" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-container').projectDir = "$rootDir/container" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-miniSDC').projectDir = "$rootDir/miniSDC" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-sdk').projectDir = "$rootDir/sdk" as File
-// project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-hadoop-common').projectDir = "$rootDir/hadoop-common" as File
+ project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-hadoop-common').projectDir = "$rootDir/hadoop-common" as File
 // project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-mapr-common').projectDir = "$rootDir/mapr-common" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib').projectDir = "$rootDir/root-lib" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-stagesupport').projectDir = "$rootDir/stagesupport" as File
@@ -110,7 +110,7 @@ project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-httpcommonlib').projectDir = "$rootDir/httpcommonlib" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-net-commonlib').projectDir = "$rootDir/net-commonlib" as File
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-lookup-protolib').projectDir = "$rootDir/lookup-protolib" as File
-// project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-hdfs-protolib').projectDir = "$rootDir/hdfs-protolib" as File
+ project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-hdfs-protolib').projectDir = "$rootDir/hdfs-protolib" as File
 // project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-mapreduce-protolib').projectDir = "$rootDir/mapreduce-protolib" as File
 // project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-maprfs-protolib').projectDir = "$rootDir/maprfs-protolib" as File
 // project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-maprdb-protolib').projectDir = "$rootDir/maprdb-protolib" as File
@@ -170,3 +170,5 @@ project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:
 
 // Stage Libraries
 project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-aws-lib').projectDir = "$rootDir/aws-lib" as File
+project(':streamsets-datacollector-root-proto:streamsets-datacollector-root-lib:streamsets-datacollector-basic-lib').projectDir = "$rootDir/basic-lib" as File
+project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-dataformats-lib').projectDir = "$rootDir/dataformats-lib" as File

@@ -16,9 +16,7 @@
 package com.streamsets.pipeline.stage.destination.solr;
 
 
-import com.esotericsoftware.minlog.Log;
 import com.streamsets.pipeline.api.Batch;
-import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -42,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SolrTarget extends BaseTarget {
-  private final static Logger LOG = LoggerFactory.getLogger(SolrTarget.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SolrTarget.class);
 
   private final InstanceTypeOptions instanceType;
   private final String solrURI;
@@ -236,7 +234,7 @@ public class SolrTarget extends BaseTarget {
       try {
         this.sdcSolrTarget.destroy();
       } catch (Exception e) {
-        Log.error(e.toString());
+        LOG.error(e.toString());
       }
     }
     super.destroy();

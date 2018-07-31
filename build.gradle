@@ -1,3 +1,12 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.14.2"
+  }
+}
+
 allprojects {
   apply plugin: 'maven'
 
@@ -7,6 +16,7 @@ allprojects {
   // Add JUnit to test scope for ll projects using the Java plugin
   plugins.withType(JavaPlugin) {
     dependencies {
+      compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
       testCompile 'junit:junit:4.12'
       testCompile 'org.mockito:mockito-core:1.10.19'
     }
@@ -34,23 +44,66 @@ allprojects {
 subprojects {
   apply plugin: 'java'
   apply plugin: 'scala'
-  apply plugin: 'java-library-distribution'
+
+  // Used for packaging stage libraries. the java-library-distribution plugin puts only runtime deps in the lib dir
+  apply plugin: 'distribution'
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
 
   // The current annotation processor expects a slightly different configuration, as determined by the maven resources plugin
-//  sourceSets {
-//    main {
-//      output.resourcesDir = "$buildDir/classes/java/$name"
-//    }
-//    test {
-//      output.resourcesDir = "$buildDir/classes/java/$name"
-//    }
-//  }
+  sourceSets {
+    main {
+      output.resourcesDir = "$buildDir/classes/java/$name"
+    }
+    test {
+      output.resourcesDir = "$buildDir/classes/java/$name"
+    }
+  }
 }
 
-apply plugin: 'java'
+def coreStageLibraryNames = [
+    "basic-lib",
+    "dataformats-lib"
+]
+
+def allStageLibraryNames = coreStageLibraryNames + [
+    "aws-lib"
+]
+
+def coreStageLibraries = subprojects.findAll { coreStageLibraryNames.contains(it.name - 'streamsets-datacollector-') }
+def allStageLibraries = subprojects.findAll { allStageLibraryNames.contains(it.name - 'streamsets-datacollector-') }
+def protolibs = subprojects.findAll { it.name.contains("protolib") }
+
+configure(allStageLibraries + protolibs) {
+  // All stage libraries depend on these
+  dependencies {
+    // Standard 'provided' dependencies -- container provides these.
+    compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+    compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+    compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
+    compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
+    compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+
+    // Common dependencies required for test compilation
+    testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+    testCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-sdk')
+    testCompile 'org.awaitility:awaitility:2.0.0'
+  }
+  // Used for packaging stage libraries. the java-library-distribution plugin puts only runtime deps in the lib dir
+  // It extends the distribution plugin so we simply reconfigure the distribution plugin ourselves
+  // ref: https://discuss.gradle.org/t/usage-of-distribution-plugin/12874/6
+  distributions {
+    main {
+      contents {
+        into('lib') {
+          from jar // the stage library jar
+          from(project.configurations.runtime) // the runtime dependencies
+        }
+      }
+    }
+  }
+}
 
 configurations {
   api
@@ -71,7 +124,6 @@ dependencies {
 }
 
 apply plugin: 'distribution'
-// for Ant filter
 import org.apache.tools.ant.filters.ReplaceTokens
 
 distributions {
@@ -83,7 +135,6 @@ distributions {
         from('dist/src/main') {
           include "etc/**"
           eachFile { file ->
-            println file.name
             if (file.name.contains("password") || file.name.contains("realm")) {
               file.setMode(0600)
             }
@@ -132,21 +183,18 @@ distributions {
       }
       // The UI
       into('sdc-static-web') {
-        from('datacollector-ui/target/dist') {
-//          exclude "karma-conf.js"
-//          exclude "app/**"
-//          exclude "bower_components"
-        }
+        from('datacollector-ui/target/dist')
       }
       // TODO: include docs
       // Extract any libs we want to include in the core tarball
       into('streamsets-libs') {
-        // TODO: add basic lib
-        // TODO: add dev lib
-        // TODO: add stats lib
-        // TODO: add windows lib
-        from zipTree('dataformats-lib/build/distributions/streamsets-datacollector-dataformats-lib-3.5.0-SNAPSHOT.zip')
-        from zipTree('aws-lib/build/distributions/streamsets-datacollector-aws-lib-3.5.0-SNAPSHOT.zip')
+        coreStageLibraries.forEach {
+          def tars = it.tasks.withType(Tar)
+          tars.forEach { tar ->
+            println("Including stage library: ${it.name}")
+            from tarTree(tar.archivePath)
+          }
+        }
       }
     }
   }

@@ -19,7 +19,6 @@ import com.google.common.cache.CacheStats;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -91,8 +90,6 @@ public class OptionalLoadingCache<Key, Value> implements LoadingCache<Key, Optio
     return delegate.asMap();
   }
 
-
-  @Nullable
   @Override
   public Optional<Value> getIfPresent(Object key) {
     return delegate.getIfPresent(key);
