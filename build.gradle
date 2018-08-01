@@ -136,6 +136,7 @@ dependencies {
 }
 
 apply plugin: 'distribution'
+
 import org.apache.tools.ant.filters.ReplaceTokens
 
 distributions {
@@ -202,7 +203,8 @@ distributions {
       }
       // The UI
       into('sdc-static-web') {
-        from('datacollector-ui/target/dist')
+//        from 'ui/common-ui/src/main/webapp'
+        from 'ui/datacollector-ui/target/dist'
       }
       // TODO: include docs
       coreStageLibraries.forEach { library ->

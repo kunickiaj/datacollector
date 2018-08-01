@@ -1,0 +1,30 @@
+plugins {
+  id "com.moowork.node" version "1.2.0"
+  id "com.moowork.grunt" version "1.2.0"
+}
+
+node {
+  version = '10.7.0'
+  download = true
+}
+
+def srcDir = new File(projectDir, "src/main/webapp")
+def targetDir = new File(project.buildDir, "target/dist")
+
+task gruntBuildForce(type: GruntTask) {
+  args = ["build", "--force"]
+  inputs.dir(srcDir)
+  outputs.dir(targetDir)
+}
+
+yarn_install {
+  args = ['--no-bin-links']
+}
+// makes sure on each build that grunt is installed
+gruntBuildForce.dependsOn 'installGrunt'
+
+// processes your package.json before running grunt build
+gruntBuildForce.dependsOn 'yarn'
+
+// runs "grunt build" as part of your gradle build
+build.dependsOn += gruntBuildForce

@@ -5,8 +5,13 @@ dependencies {
   compile project(':core:common')
   compile project(':core:container-common')
   compile group: 'io.airlift', name: 'airline', version: '0.7'
-  compile group: 'io.dropwizard.metrics', name: 'metrics-json', version: '3.1.2'
-  compile group: 'io.dropwizard.metrics', name: 'metrics-jvm', version: '3.1.2'
+  compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+  compile(group: 'io.dropwizard.metrics', name: 'metrics-json', version: '3.1.2') {
+    exclude(module: 'metrics-core')
+  }
+  compile(group: 'io.dropwizard.metrics', name: 'metrics-jvm', version: '3.1.2') {
+    exclude(module: 'metrics-core')
+  }
   compile group: 'com.google.guava', name: 'guava', version: '18.0'
   compile group: 'com.squareup.dagger', name: 'dagger', version: '1.2.2'
   compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.2.v20170220'
@@ -75,7 +80,6 @@ dependencies {
   }
   testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
   compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
-  compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
   compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
   compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
   compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
