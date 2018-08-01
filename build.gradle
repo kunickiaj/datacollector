@@ -1,11 +1,17 @@
 buildscript {
   repositories {
     jcenter()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
   }
   dependencies {
     classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.14.2"
+    classpath "gradle.plugin.com.dorongold.plugins:task-tree:1.3"
   }
 }
+
+apply plugin: "com.dorongold.task-tree"
 
 allprojects {
   apply plugin: 'maven'
@@ -71,8 +77,8 @@ def allStageLibraryNames = coreStageLibraryNames + [
     "aws-lib"
 ]
 
-def coreStageLibraries = subprojects.findAll { coreStageLibraryNames.contains(it.name - 'streamsets-datacollector-') }
-def allStageLibraries = subprojects.findAll { allStageLibraryNames.contains(it.name - 'streamsets-datacollector-') }
+def coreStageLibraries = subprojects.findAll { coreStageLibraryNames.contains(it.name) }
+def allStageLibraries = subprojects.findAll { allStageLibraryNames.contains(it.name) }
 def protolibs = subprojects.findAll { it.name.contains("protolib") }
 
 configure(allStageLibraries + protolibs) {
@@ -87,13 +93,14 @@ configure(allStageLibraries + protolibs) {
 
     // Common dependencies required for test compilation
     testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
-    testCompile project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-sdk')
+    testCompile project(':core:sdk')
     testCompile 'org.awaitility:awaitility:2.0.0'
   }
   // Used for packaging stage libraries. the java-library-distribution plugin puts only runtime deps in the lib dir
   // It extends the distribution plugin so we simply reconfigure the distribution plugin ourselves
   // ref: https://discuss.gradle.org/t/usage-of-distribution-plugin/12874/6
   distributions {
+    distZip.enabled = false
     main {
       contents {
         into('lib') {
@@ -109,6 +116,7 @@ configurations {
   api
   container
   rootClasspath
+  coreStageLibs
 }
 
 dependencies {
@@ -118,8 +126,12 @@ dependencies {
       "org.slf4j:jul-to-slf4j:1.7.7"
   )
   container(
-      project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-container'),
-      project(':streamsets-datacollector-root-proto:streamsets-datacollector-root:streamsets-datacollector-container-common'),
+      project(':core:container'),
+      project(':core:container-common'),
+  )
+  coreStageLibs(
+      project(':lib:stage:basic-lib'),
+      project(':core:dataformats-lib'),
   )
 }
 
@@ -127,6 +139,7 @@ apply plugin: 'distribution'
 import org.apache.tools.ant.filters.ReplaceTokens
 
 distributions {
+  distZip.enabled = false
   core {
     baseName = 'streamsets-datacollector-core'
     contents {
@@ -170,7 +183,13 @@ distributions {
         from configurations.api
       }
       into('libexec/bootstrap-libs/main') {
-        from 'bootstrap/build/libs'
+        from project(':core:bootstrap').jar
+      }
+      into('libexec/bootstrap-libs/cluster') {
+        from project(':core:cluster:cluster-bootstrap').jar
+        from project(':core:cluster:cluster-bootstrap-api').jar
+        from project(':core:cluster:mapr-cluster-bootstrap').jar
+        from project(':core:cluster:mesos-bootstrap').jar
       }
       into('cli-lib') {
         from 'cli/build/libs'
@@ -186,14 +205,10 @@ distributions {
         from('datacollector-ui/target/dist')
       }
       // TODO: include docs
-      // Extract any libs we want to include in the core tarball
-      into('streamsets-libs') {
-        coreStageLibraries.forEach {
-          def tars = it.tasks.withType(Tar)
-          tars.forEach { tar ->
-            println("Including stage library: ${it.name}")
-            from tarTree(tar.archivePath)
-          }
+      coreStageLibraries.forEach { library ->
+        into("streamsets-libs/${library.name}/lib") {
+          from library.tasks.withType(Jar)// the stage library jar
+          from(library.configurations.runtime) // the runtime dependencies
         }
       }
     }

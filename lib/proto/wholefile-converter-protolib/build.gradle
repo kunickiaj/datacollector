@@ -1,0 +1,20 @@
+
+description = 'StreamSets Data Collector Whole File Converter ProtoLib'
+dependencies {
+    compile group: 'org.apache.parquet', name: 'parquet-avro', version:'1.8.1'
+    compile(group: 'org.apache.hadoop', name: 'hadoop-client', version:'2.6.0') {
+exclude(module: 'slf4j-api')
+exclude(module: 'slf4j-log4j12')
+exclude(module: 'log4j')
+exclude(module: 'metrics-core')
+exclude(module: 'servlet-api')
+    }
+    testCompile group: 'junit', name: 'junit', version:'4.12'
+    compileOnly group: 'org.apache.avro', name: 'avro-mapred', version:'1.7.7'
+    compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version:'3.5.0-SNAPSHOT'
+    compileOnly group: 'log4j', name: 'log4j', version:'1.2.17'
+    compileOnly group: 'org.slf4j', name: 'slf4j-api', version:'1.7.7'
+    compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version:'1.7.7'
+    compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version:'3.1.2'
+  testCompile project(':core:sdk')
+}
