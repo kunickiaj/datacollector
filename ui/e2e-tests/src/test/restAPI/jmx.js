@@ -28,4 +28,3 @@ frisby.create('Should return JMX JSON data')
     expect(jmxJSON.beans.length > 0).toBeTruthy();
   })
   .toss();
-

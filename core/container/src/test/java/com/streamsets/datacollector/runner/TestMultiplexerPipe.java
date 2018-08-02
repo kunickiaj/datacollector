@@ -17,15 +17,13 @@ package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.main.RuntimeInfo;
-
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.List;
+import java.util.Arrays;
 
-import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 
 
 public class TestMultiplexerPipe {
@@ -76,8 +74,8 @@ public class TestMultiplexerPipe {
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getRunners().get(0).get(1);
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
-    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("t::o"), (List<String>)argThat(contains("t--t1::s::m", "t--t2::s::m")));
-    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("e::o"), (List<String>)argThat(contains("e--t3::s::m", "e--t4::s::m")));
+    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("t::o"), argThat(list -> list.containsAll(Arrays.asList("t--t1::s::m", "t--t2::s::m"))));
+    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("e::o"), argThat(list -> list.containsAll(Arrays.asList("e--t3::s::m", "e--t4::s::m"))));
     Mockito.verifyNoMoreInteractions(pipeBatch);
   }
 

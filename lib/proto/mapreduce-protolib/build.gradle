@@ -31,6 +31,7 @@ dependencies {
   }
   testCompile(group: 'org.apache.hadoop', name: 'hadoop-minikdc', version: '2.6.0') {
     exclude(module: 'apacheds-jdbm1')
+    exclude(module: 'api-ldap-schema-data')
   }
   testCompile group: 'org.apache.directory.jdbm', name: 'apacheds-jdbm1', version: '2.0.0-M3'
   compileOnly group: 'org.apache.avro', name: 'avro-mapred', version: '1.7.7'

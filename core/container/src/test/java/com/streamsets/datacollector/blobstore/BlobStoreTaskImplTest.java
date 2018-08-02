@@ -33,7 +33,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class BlobStoreTaskImplTest {
 
   private static RuntimeInfo createRuntimeInfo() throws Exception {
-   String dataDirectory = Files.createTempDirectory("blob-store-test").toString();
+    String dataDirectory = Files.createTempDirectory("blob-store-test").toString();
 
     RuntimeInfo runtimeInfo = mock(RuntimeInfo.class);
     when(runtimeInfo.getDataDir()).thenReturn(dataDirectory);

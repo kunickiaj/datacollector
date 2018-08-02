@@ -1211,7 +1211,7 @@ public class MockStages {
         "pipelineId",
         UUID.randomUUID(),
         "label",
-        null,
+        "",
         createPipelineConfigs(),
         null,
         Collections.emptyList(),

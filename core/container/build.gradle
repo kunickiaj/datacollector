@@ -5,7 +5,6 @@ dependencies {
   compile project(':core:common')
   compile project(':core:container-common')
   compile group: 'io.airlift', name: 'airline', version: '0.7'
-  compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
   compile(group: 'io.dropwizard.metrics', name: 'metrics-json', version: '3.1.2') {
     exclude(module: 'metrics-core')
   }
@@ -62,15 +61,15 @@ dependencies {
   testCompile project(':core:testing')
   testCompile group: 'org.awaitility', name: 'awaitility', version: '2.0.0'
   testCompile group: 'org.javassist', name: 'javassist', version: '3.21.0-GA'
-  testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
-  testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.3'
-  testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.3'
+  testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.4'
+  testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: '1.7.4'
   testCompile group: 'org.eclipse.jetty.websocket', name: 'websocket-client', version: '9.4.2.v20170220'
   testCompile group: 'org.glassfish.jersey.test-framework.providers', name: 'jersey-test-framework-provider-inmemory', version: '2.25.1'
   testCompile group: 'org.glassfish.jersey.test-framework', name: 'jersey-test-framework-core', version: '2.25.1'
   testCompile group: 'com.icegreen', name: 'greenmail', version: '1.4.0'
   testCompile(group: 'org.apache.hadoop', name: 'hadoop-minikdc', version: '2.6.0') {
     exclude(module: 'apacheds-jdbm1')
+    exclude(module: 'api-ldap-schema-data')
   }
   testCompile group: 'org.apache.directory.jdbm', name: 'apacheds-jdbm1', version: '2.0.0-M3'
   testCompile group: 'org.testcontainers', name: 'testcontainers', version: '1.4.3'
@@ -80,11 +79,16 @@ dependencies {
   }
   testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
   compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
   compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
   compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
   compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
   compileOnly group: 'org.slf4j', name: 'jul-to-slf4j', version: '1.7.7'
-  compileOnly group: 'com.squareup.dagger', name: 'dagger-compiler', version: '1.2.2'
+  annotationProcessor group: 'com.squareup.dagger', name: 'dagger-compiler', version: '1.2.2'
+
+  testCompile group: 'com.squareup.dagger', name: 'dagger', version: '1.2.2'
+  testAnnotationProcessor group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+  testAnnotationProcessor group: 'com.squareup.dagger', name: 'dagger-compiler', version: '1.2.2'
 }
 
 compileJava {
@@ -94,3 +98,15 @@ compileJava {
 compileTestJava {
   options.compilerArgs += ["-Astreamsets.datacollector.annotationsprocessor.skip"]
 }
+
+test {
+  jvmArgs "-javaagent:${buildDir}/agents/bootstrap-${version}.jar", "-Dsun.net.http.allowRestrictedHeaders=true"
+  systemProperty 'streamsets.test.mode', 'true'
+}
+
+task copyBootstrapJar(type: Copy) {
+  from project(':core:bootstrap').jar
+  into("$buildDir/agents")
+}
+
+test.dependsOn += copyBootstrapJar

@@ -5,7 +5,7 @@ plugins {
 
 node {
   version = '10.7.0'
-  download = true
+  download = false
 }
 
 def srcDir = new File(projectDir, "src/main/webapp")

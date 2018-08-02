@@ -6,11 +6,13 @@ buildscript {
     }
   }
   dependencies {
+    classpath "net.ltgt.gradle:gradle-apt-plugin:0.18"
     classpath "com.commercehub.gradle.plugin:gradle-avro-plugin:0.14.2"
     classpath "gradle.plugin.com.dorongold.plugins:task-tree:1.3"
   }
 }
 
+apply plugin: "net.ltgt.apt"
 apply plugin: "com.dorongold.task-tree"
 
 allprojects {
@@ -33,16 +35,16 @@ allprojects {
 
     maven { url "https://repo.streamsets.net/artifactory/libs-release" }
     maven { url "https://repo.streamsets.net/artifactory/libs-snapshot" }
-    maven { url "https://repository.cloudera.com/content/groups/cloudera-repos" }
-    maven { url "http://packages.confluent.io/maven/" }
-    maven { url "https://artifacts.elastic.co/maven" }
-    maven { url "http://repository.mapr.com/maven/" }
-    maven { url "http://repo.hortonworks.com/content/repositories/releases/" }
-    maven { url "http://repo.hortonworks.com/content/repositories/re-hosted/" }
-    maven { url "http://repo.hortonworks.com/content/repositories/jetty-hadoop/" }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-    maven { url "http://files.kinetica.com/nexus/content/repositories/releases/" }
-    maven { url "http://repository.mapr.com/nexus/content/repositories/releases" }
+//    maven { url "https://repository.cloudera.com/content/groups/cloudera-repos" }
+//    maven { url "http://packages.confluent.io/maven/" }
+//    maven { url "https://artifacts.elastic.co/maven" }
+//    maven { url "http://repository.mapr.com/maven/" }
+//    maven { url "http://repo.hortonworks.com/content/repositories/releases/" }
+//    maven { url "http://repo.hortonworks.com/content/repositories/re-hosted/" }
+//    maven { url "http://repo.hortonworks.com/content/repositories/jetty-hadoop/" }
+//    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+//    maven { url "http://files.kinetica.com/nexus/content/repositories/releases/" }
+//    maven { url "http://repository.mapr.com/nexus/content/repositories/releases" }
 //    maven { url "http://bits.cloudera.com/f93c6c9d/cdh6/6.0.0-beta1/maven-repository/" }
   }
 }
@@ -56,6 +58,10 @@ subprojects {
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
+
+  // Ensure resources are copied first otherwise our annotations processor fails.
+  compileJava.dependsOn += processResources
+  compileTestJava.dependsOn += processTestResources
 
   // The current annotation processor expects a slightly different configuration, as determined by the maven resources plugin
   sourceSets {

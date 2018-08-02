@@ -113,5 +113,3 @@ module.exports = function(grunt) {
     'protractor:clean', 'protractor:safari']);
 
 };
-
-
