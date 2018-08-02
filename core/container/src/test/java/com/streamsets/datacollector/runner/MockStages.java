@@ -86,9 +86,9 @@ public class MockStages {
 
   public static StageConfiguration createPushSource(String instanceName, List<String> outputs, List<String> events) {
     return new StageConfigurationBuilder(instanceName, "pushSourceName")
-      .withOutputLanes(outputs)
-      .withEventLanes(events)
-      .build();
+        .withOutputLanes(outputs)
+        .withEventLanes(events)
+        .build();
   }
 
   public static StageConfiguration createSource(String instanceName, List<String> outputs) {
@@ -98,9 +98,9 @@ public class MockStages {
   @SuppressWarnings("unchecked")
   public static StageConfiguration createSource(String instanceName, List<String> outputs, List<String> events) {
     return new StageConfigurationBuilder(instanceName, "sourceName")
-      .withOutputLanes(outputs)
-      .withEventLanes(events)
-      .build();
+        .withOutputLanes(outputs)
+        .withEventLanes(events)
+        .build();
   }
 
   public static StageConfiguration createProcessor(String instanceName, List<String> inputs, List<String> outputs) {
@@ -110,10 +110,10 @@ public class MockStages {
   @SuppressWarnings("unchecked")
   public static StageConfiguration createProcessor(String instanceName, List<String> inputs, List<String> outputs, List<String> events) {
     return new StageConfigurationBuilder(instanceName, "processorName")
-      .withInputLanes(inputs)
-      .withOutputLanes(outputs)
-      .withEventLanes(events)
-      .build();
+        .withInputLanes(inputs)
+        .withOutputLanes(outputs)
+        .withEventLanes(events)
+        .build();
   }
 
   public static StageConfiguration createTarget(String instanceName, List<String> inputs) {
@@ -123,17 +123,17 @@ public class MockStages {
   @SuppressWarnings("unchecked")
   public static StageConfiguration createTarget(String instanceName, List<String> inputs, List<String> events) {
     return new StageConfigurationBuilder(instanceName, "targetName")
-      .withInputLanes(inputs)
-      .withEventLanes(events)
-      .build();
+        .withInputLanes(inputs)
+        .withEventLanes(events)
+        .build();
   }
 
   @SuppressWarnings("unchecked")
   public static StageConfiguration createExecutor(String instanceName, List<String> inputs, List<String> events) {
     return new StageConfigurationBuilder(instanceName, "executorName")
-      .withInputLanes(inputs)
-      .withEventLanes(events)
-      .build();
+        .withInputLanes(inputs)
+        .withEventLanes(events)
+        .build();
   }
 
   private static Source sourceCapture;
@@ -185,24 +185,24 @@ public class MockStages {
   public static class MockRawSourcePreviewer implements RawSourcePreviewer {
 
     @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "localhost",
-      label = "Broker Host",
-      description = "",
-      displayPosition = 10
+        required = true,
+        type = ConfigDef.Type.STRING,
+        defaultValue = "localhost",
+        label = "Broker Host",
+        description = "",
+        displayPosition = 10
     )
     public String brokerHost;
 
     @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "9092",
-      label = "Broker Port",
-      description = "",
-      displayPosition = 20,
-      min = 1,
-      max = Integer.MAX_VALUE
+        required = true,
+        type = ConfigDef.Type.NUMBER,
+        defaultValue = "9092",
+        label = "Broker Port",
+        description = "",
+        displayPosition = 20,
+        min = 1,
+        max = Integer.MAX_VALUE
     )
     public int brokerPort;
 
@@ -761,68 +761,68 @@ public class MockStages {
       public Builder(ClassLoader cl) {
 
         ConfigDefinition brokerHostConfig = new ConfigDefinition("brokerHost", ConfigDef.Type.STRING, "brokerHost", "",
-          "", true, "", "brokerHost", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
-          Collections.<ElConstantDefinition>emptyList(), 0, 0,
-          "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap());
+            "", true, "", "brokerHost", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
+            Collections.<ElConstantDefinition>emptyList(), 0, 0,
+            "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap());
         ConfigDefinition brokerPortConfig = new ConfigDefinition("brokerPort", ConfigDef.Type.NUMBER, "brokerPort", "",
-          "", true, "", "brokerPort", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
-          Collections.<ElConstantDefinition>emptyList(), 0, 0,
-          "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap());
+            "", true, "", "brokerPort", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
+            Collections.<ElConstantDefinition>emptyList(), 0, 0,
+            "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap());
 
         RawSourceDefinition rawSourceDefinition = new RawSourceDefinition(MockRawSourcePreviewer.class.getName(), "*/*",
-          Arrays.asList(brokerHostConfig, brokerPortConfig));
+            Arrays.asList(brokerHostConfig, brokerPortConfig));
 
         StageDefinition sDef = new StageDefinitionBuilder(cl, MSource.class, "sourceName")
-          .withRawSourceDefintion(rawSourceDefinition)
-          .build();
+            .withRawSourceDefintion(rawSourceDefinition)
+            .build();
         StageDefinition socDef = new StageDefinitionBuilder(cl, MSourceOffsetCommitter.class, "sourceOffsetCommitterName")
-          .build();
+            .build();
         // Event producing source
         StageDefinition seDef = new StageDefinitionBuilder(cl, MSource.class, "sourceNameEvent")
-          .withProducingEvents(true)
-          .build();
+            .withProducingEvents(true)
+            .build();
         StageDefinition pushSourceDef = new StageDefinitionBuilder(cl, MPushSource.class, "pushSourceName")
-          .withProducingEvents(true)
-          .build();
+            .withProducingEvents(true)
+            .build();
 
         StageDefinition hiddenPDef = new StageDefinitionBuilder(cl, MProcessor.class, "hiddenProcessor")
-          .withHideStage(Collections.singletonList(HideStage.Type.FIELD_PROCESSOR))
-          .build();
+            .withHideStage(Collections.singletonList(HideStage.Type.FIELD_PROCESSOR))
+            .build();
         StageDefinition pDef = new StageDefinitionBuilder(cl, MProcessor.class, "processorName")
-          .build();
+            .build();
 
         ModelDefinition m = new ModelDefinition(ModelType.FIELD_SELECTOR_MULTI_VALUE, null, Collections.<String>emptyList(),
-          Collections.<String>emptyList(), null, null, null);
+            Collections.<String>emptyList(), null, null, null);
         ConfigDefinition stageReqField = new ConfigDefinition("stageRequiredFields", ConfigDef.Type.MODEL, "stageRequiredFields",
-          "stageRequiredFields", null, false, "groupName", "stageRequiredFieldName", m, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
-          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-          ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
+            "stageRequiredFields", null, false, "groupName", "stageRequiredFieldName", m, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
+            Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
+            ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         StageDefinition tDef = new StageDefinitionBuilder(cl, MTarget.class, "targetName")
-          .withConfig(stageReqField)
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
-          .build();
+            .withConfig(stageReqField)
+            .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+            .build();
 
         StageDefinition tEventDef = new StageDefinitionBuilder(cl, MExecutor.class, "executorName")
-          .withConfig(stageReqField)
-          .withProducingEvents(true)
-          .withPipelineLifecycleStage(true)
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
-          .build();
+            .withConfig(stageReqField)
+            .withProducingEvents(true)
+            .withPipelineLifecycleStage(true)
+            .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+            .build();
 
         StageDefinition teDef = new StageDefinitionBuilder(cl, MTarget.class, "targetNameEvent")
-          .withProducingEvents(true)
-          .build();
+            .withProducingEvents(true)
+            .build();
 
         ConfigDefinition reqField = new ConfigDefinition(
-          "requiredFieldConfName", ConfigDef.Type.STRING, "requiredFieldLabel", "requiredFieldDesc", 10, true,
-          "groupName", "requiredFieldFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
-          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-          ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
+            "requiredFieldConfName", ConfigDef.Type.STRING, "requiredFieldLabel", "requiredFieldDesc", 10, true,
+            "groupName", "requiredFieldFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
+            Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
+            ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         StageDefinition targetWithReqField = new StageDefinitionBuilder(cl, MTarget.class, "targetWithReqField")
-          .withConfig(reqField)
-          .build();
+            .withConfig(reqField)
+            .build();
 
         ConfigDefinition requiredMapField = new ConfigDefinition(
             "requiredMapFieldConfName",
@@ -854,29 +854,29 @@ public class MockStages {
 
         //error target configurations
         ConfigDefinition errorTargetConf = new ConfigDefinition(
-          "errorTargetConfName", ConfigDef.Type.STRING, "errorTargetConfLabel", "errorTargetConfDesc",
-          "/SDC_HOME/errorDir", true, "groupName", "errorTargetConfFieldName", null, "", null , 0,
-          Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-          Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
+            "errorTargetConfName", ConfigDef.Type.STRING, "errorTargetConfLabel", "errorTargetConfDesc",
+            "/SDC_HOME/errorDir", true, "groupName", "errorTargetConfFieldName", null, "", null , 0,
+            Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
+            Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         StageDefinition eDef = new StageDefinitionBuilder(cl, ETarget.class, "errorTarget")
-          .withErrorStage(true)
-          .withPreconditions(false)
-          .withConfig(errorTargetConf)
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
-          .build();
+            .withErrorStage(true)
+            .withPreconditions(false)
+            .withConfig(errorTargetConf)
+            .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+            .build();
 
         StageDefinition statsDef = new StageDefinitionBuilder(cl, StatsTarget.class, "statsAggregator")
-          .withPreconditions(false)
-          .withStatsAggregatorStage(true)
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
-          .build();
+            .withPreconditions(false)
+            .withStatsAggregatorStage(true)
+            .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+            .build();
 
         ConfigDefinition depConfDef = new ConfigDefinition(
-          "dependencyConfName", ConfigDef.Type.NUMBER, "dependencyConfLabel", "dependencyConfDesc", 5, true,
-          "groupName", "dependencyConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
-          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-          ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
+            "dependencyConfName", ConfigDef.Type.NUMBER, "dependencyConfLabel", "dependencyConfDesc", 5, true,
+            "groupName", "dependencyConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
+            Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
+            ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
         List<Object> triggeredBy = new ArrayList<>();
         triggeredBy.add(1);
         Map<String, List<Object>> triggered = new HashMap<>(1);
@@ -884,79 +884,79 @@ public class MockStages {
         triggerValues.add(1);
         triggered.put("dependencyConfName", triggerValues);
         ConfigDefinition triggeredConfDef = new ConfigDefinition(
-          "triggeredConfName", ConfigDef.Type.NUMBER, "triggeredConfLabel", "triggeredConfDesc", 10, true,
-          "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0,
-          Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-          Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, triggered);
+            "triggeredConfName", ConfigDef.Type.NUMBER, "triggeredConfLabel", "triggeredConfDesc", 10, true,
+            "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0,
+            Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
+            Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, triggered);
 
         StageDefinition swcDef = new StageDefinitionBuilder(cl, MSource.class, "sourceWithConfigsName")
-          .withConfig(depConfDef, triggeredConfDef)
-          .build();
+            .withConfig(depConfDef, triggeredConfDef)
+            .build();
 
         StageDefinition clusterStageDef = new StageDefinitionBuilder(cl, ClusterMSource.class, "clusterSource")
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
-          .build();
+            .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+            .build();
 
         StageDefinition clusterLibraryStageDef = new StageDefinitionBuilder(cl, ClusterMSource.class, "clusterLibrarySource")
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH)
-          .build();
+            .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH)
+            .build();
 
         StageDefinition commonLibraryTargetDef = new StageDefinitionBuilder(cl, MTarget.class, "commonLibraryTarget")
-          .build();
+            .build();
 
         ConfigDefinition regularConf = new ConfigDefinition(
-          "regularConfName", ConfigDef.Type.NUMBER, "regularConfLabel", "regularConfDesc", 10, true,
-          "groupName", "regularConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
-          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-          ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
+            "regularConfName", ConfigDef.Type.NUMBER, "regularConfLabel", "regularConfDesc", 10, true,
+            "groupName", "regularConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
+            Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
+            ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         List<ConfigDefinition> list = new ArrayList<>();
         list.add(regularConf);
         ModelDefinition modelDefinition = new ModelDefinition(ModelType.LIST_BEAN, null, Collections.<String>emptyList(),
-          Collections.<String>emptyList(), null, list, null);
+            Collections.<String>emptyList(), null, list, null);
 
         ConfigDefinition complexConf = new ConfigDefinition(
-          "complexConfName", ConfigDef.Type.MODEL, "complexConfLabel", "complexConfDesc", null, true,
-          "groupName", "complexConfFieldName", modelDefinition, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
-          Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-          ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
+            "complexConfName", ConfigDef.Type.MODEL, "complexConfLabel", "complexConfDesc", null, true,
+            "groupName", "complexConfFieldName", modelDefinition, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
+            Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
+            ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>());
 
         StageDefinition complexStage = new StageDefinitionBuilder(cl,ComplexSource.class, "complexStageName")
-          .withConfig(complexConf)
-          .build();
+            .withConfig(complexConf)
+            .build();
 
         StageDefinition offsetControlTarget = new StageDefinitionBuilder(cl, OffsetControllerTarget.class, "offsetControlTarget")
-          .withOffsetCommitTrigger(true)
-          .build();
+            .withOffsetCommitTrigger(true)
+            .build();
 
 
         StageDefinition multiLaneSource = new StageDefinitionBuilder(cl, OffsetControllerSource.class, "multiLaneSource")
-          .withOutputStreams(2)
-          .build();
+            .withOutputStreams(2)
+            .build();
 
         StageDefinition[] stageDefs =
-          new StageDefinition[] {
-              sDef,
-              socDef,
-              seDef,
-              pushSourceDef,
-              hiddenPDef,
-              pDef,
-              tDef,
-              tEventDef,
-              teDef,
-              targetWithReqField,
-              targetWithRequiredMapField,
-              swcDef,
-              eDef,
-              statsDef,
-              clusterStageDef,
-              complexStage,
-              clusterLibraryStageDef,
-              commonLibraryTargetDef,
-              offsetControlTarget,
-              multiLaneSource
-          };
+            new StageDefinition[] {
+                sDef,
+                socDef,
+                seDef,
+                pushSourceDef,
+                hiddenPDef,
+                pDef,
+                tDef,
+                tEventDef,
+                teDef,
+                targetWithReqField,
+                targetWithRequiredMapField,
+                swcDef,
+                eDef,
+                statsDef,
+                clusterStageDef,
+                complexStage,
+                clusterLibraryStageDef,
+                commonLibraryTargetDef,
+                offsetControlTarget,
+                multiLaneSource
+            };
         stages = new HashMap<>();
         for (StageDefinition def : stageDefs) {
           if (stages.containsKey(def.getName())) {
@@ -1023,33 +1023,33 @@ public class MockStages {
 
     public static RawSourceDefinition getRawSourceDefinition() {
       ConfigDefinition brokerHostConfig = new ConfigDefinition("brokerHost", ConfigDef.Type.STRING, "brokerHost", "",
-        "", true, "", "brokerHost", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
-        Collections.<ElConstantDefinition>emptyList(), 0, 0,
-        "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap());
+          "", true, "", "brokerHost", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
+          Collections.<ElConstantDefinition>emptyList(), 0, 0,
+          "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap());
       ConfigDefinition brokerPortConfig = new ConfigDefinition("brokerPort", ConfigDef.Type.NUMBER, "brokerPort", "",
-        "", true, "", "brokerPort", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
-        Collections.<ElConstantDefinition>emptyList(), 0, 0,
-        "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap());
+          "", true, "", "brokerPort", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
+          Collections.<ElConstantDefinition>emptyList(), 0, 0,
+          "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap());
 
       RawSourceDefinition rawSourceDefinition = new RawSourceDefinition(MockRawSourcePreviewer.class.getName(), "*/*",
-        Arrays.asList(brokerHostConfig, brokerPortConfig));
+          Arrays.asList(brokerHostConfig, brokerPortConfig));
       return rawSourceDefinition;
     }
 
     public static StageDefinition getErrorStageDefinition(ClassLoader cl) {
-     //error target configurations
+      //error target configurations
       ConfigDefinition errorTargetConf = new ConfigDefinition(
-        "errorTargetConfName", ConfigDef.Type.STRING, "errorTargetConfLabel", "errorTargetConfDesc",
-        "/SDC_HOME/errorDir", true, "groupName", "errorTargetConfFieldName", null, "", null , 0,
-        Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
-        Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
+          "errorTargetConfName", ConfigDef.Type.STRING, "errorTargetConfLabel", "errorTargetConfDesc",
+          "/SDC_HOME/errorDir", true, "groupName", "errorTargetConfFieldName", null, "", null , 0,
+          Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
+          Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null);
 
       return new StageDefinitionBuilder(cl, ETarget.class, "errorTarget")
-        .withErrorStage(true)
-        .withPreconditions(false)
-        .withConfig(errorTargetConf)
-        .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
-        .build();
+          .withErrorStage(true)
+          .withPreconditions(false)
+          .withConfig(errorTargetConf)
+          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+          .build();
     }
 
     public static StageDefinition getStatsAggStageDefinition(ClassLoader cl) {
@@ -1071,10 +1071,10 @@ public class MockStages {
 
       public ClusterStreamingBuilder(ClassLoader cl) {
         clusterStageDef = new StageDefinitionBuilder(cl, MSource.class, "sourceName")
-          .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
-          .withRawSourceDefintion(getRawSourceDefinition())
-          .withLibJarsRegexp(ClusterModeConstants.SPARK_KAFKA_JAR_REGEX)
-          .build();
+            .withExecutionModes(ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_BATCH, ExecutionMode.CLUSTER_MESOS_STREAMING)
+            .withRawSourceDefintion(getRawSourceDefinition())
+            .withLibJarsRegexp(ClusterModeConstants.SPARK_KAFKA_JAR_REGEX)
+            .build();
 
         errorTargetStageDef = getErrorStageDefinition(cl);
         statsTargetStageDef = getStatsAggStageDefinition(cl);
@@ -1124,10 +1124,10 @@ public class MockStages {
 
       public ClusterBatchBuilder(ClassLoader cl) {
         clusterStageDef = new StageDefinitionBuilder(cl, MSource.class, "sourceName")
-          .withExecutionModes(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE)
-          .withRawSourceDefintion(getRawSourceDefinition())
-          .withLibJarsRegexp(ClusterModeConstants.AVRO_JAR_REGEX, ClusterModeConstants.AVRO_MAPRED_JAR_REGEX)
-          .build();
+            .withExecutionModes(ExecutionMode.CLUSTER_BATCH, ExecutionMode.STANDALONE)
+            .withRawSourceDefintion(getRawSourceDefinition())
+            .withLibJarsRegexp(ClusterModeConstants.AVRO_JAR_REGEX, ClusterModeConstants.AVRO_MAPRED_JAR_REGEX)
+            .build();
         errorTargetStageDef = getErrorStageDefinition(cl);
         statsTargetStageDef = getStatsAggStageDefinition(cl);
       }
@@ -1141,8 +1141,8 @@ public class MockStages {
   @SuppressWarnings("unchecked")
   public static List<StageConfiguration> getSourceStageConfig() {
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
-      .withOutputLanes("s")
-      .build();
+        .withOutputLanes("s")
+        .build();
     List<StageConfiguration> stages = new ArrayList<>();
     stages.add(source);
     return stages;
@@ -1169,8 +1169,8 @@ public class MockStages {
   @SuppressWarnings("unchecked")
   public static StageConfiguration getErrorStageConfig() {
     return new StageConfigurationBuilder("errorStage", "errorTarget")
-      .withConfig(new Config("errorTargetConfName", "/SDC_HOME/errorDir"))
-      .build();
+        .withConfig(new Config("errorTargetConfName", "/SDC_HOME/errorDir"))
+        .build();
   }
 
   public static StageConfiguration getStatsAggregatorStageConfig() {
@@ -1179,7 +1179,7 @@ public class MockStages {
 
   public static StageConfiguration getLifecycleExecutorConfig() {
     return new StageConfigurationBuilder("eventStage", "executorName")
-      .build();
+        .build();
   }
 
   private static List<Config> createPipelineConfigs() {
@@ -1193,17 +1193,17 @@ public class MockStages {
   public static PipelineConfiguration createPipelineConfigurationSourceProcessorTarget(int schemaVersion) {
     List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
-      .withOutputLanes("s")
-      .build();
+        .withOutputLanes("s")
+        .build();
     stages.add(source);
     StageConfiguration processor = new StageConfigurationBuilder("p", "processorName")
-      .withInputLanes("s")
-      .withOutputLanes("p")
-      .build();
+        .withInputLanes("s")
+        .withOutputLanes("p")
+        .build();
     stages.add(processor);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("p")
-      .build();
+        .withInputLanes("p")
+        .build();
     stages.add(target);
 
     PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(schemaVersion,
@@ -1211,7 +1211,7 @@ public class MockStages {
         "pipelineId",
         UUID.randomUUID(),
         "label",
-        "",
+        null,
         createPipelineConfigs(),
         null,
         Collections.emptyList(),
@@ -1426,12 +1426,12 @@ public class MockStages {
     List<StageConfiguration> stages = new ArrayList<>();
 
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceNameEvent")
-      .withOutputLanes("t")
-      .build();
+        .withOutputLanes("t")
+        .build();
     stages.add(source);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("t")
-      .build();
+        .withInputLanes("t")
+        .build();
     stages.add(target);
 
     PipelineConfiguration pipelineConfiguration = pipeline(stages);
@@ -1446,17 +1446,17 @@ public class MockStages {
     List<StageConfiguration> stages = new ArrayList<>();
 
     StageConfiguration eventDest = new StageConfigurationBuilder("e", "targetName")
-      .withInputLanes("e")
-      .build();
+        .withInputLanes("e")
+        .build();
     stages.add(eventDest);
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceNameEvent")
-      .withOutputLanes("t")
-      .withEventLanes("e")
-      .build();
+        .withOutputLanes("t")
+        .withEventLanes("e")
+        .build();
     stages.add(source);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("t")
-      .build();
+        .withInputLanes("t")
+        .build();
     stages.add(target);
 
     PipelineConfiguration pipelineConfiguration = pipeline(stages);
@@ -1471,17 +1471,17 @@ public class MockStages {
     List<StageConfiguration> stages = new ArrayList<>();
 
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceNameEvent")
-      .withOutputLanes("t")
-      .withEventLanes("e")
-      .build();
+        .withOutputLanes("t")
+        .withEventLanes("e")
+        .build();
     stages.add(source);
     StageConfiguration executor = new StageConfigurationBuilder("e", "executorName")
-      .withInputLanes("e")
-      .build();
+        .withInputLanes("e")
+        .build();
     stages.add(executor);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("t")
-      .build();
+        .withInputLanes("t")
+        .build();
     stages.add(target);
 
     PipelineConfiguration pipelineConfiguration = pipeline(stages);
@@ -1496,13 +1496,13 @@ public class MockStages {
     List<StageConfiguration> stages = new ArrayList<>();
 
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
-      .withOutputLanes("t")
-      .withEventLanes("e")
-      .build();
+        .withOutputLanes("t")
+        .withEventLanes("e")
+        .build();
     stages.add(source);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("t")
-      .build();
+        .withInputLanes("t")
+        .build();
     stages.add(target);
 
     PipelineConfiguration pipelineConfiguration = pipeline(stages);
@@ -1517,18 +1517,18 @@ public class MockStages {
     List<StageConfiguration> stages = new ArrayList<>();
 
     StageConfiguration eventDest = new StageConfigurationBuilder("p", "processorName")
-      .withInputLanes("e")
-      .withOutputLanes("eo")
-      .build();
+        .withInputLanes("e")
+        .withOutputLanes("eo")
+        .build();
     stages.add(eventDest);
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceNameEvent")
-      .withOutputLanes("t")
-      .withEventLanes("e")
-      .build();
+        .withOutputLanes("t")
+        .withEventLanes("e")
+        .build();
     stages.add(source);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("t", "eo")
-      .build();
+        .withInputLanes("t", "eo")
+        .build();
     stages.add(target);
 
     PipelineConfiguration pipelineConfiguration = pipeline(stages);
@@ -1542,17 +1542,17 @@ public class MockStages {
   public static PipelineConfiguration createPipelineWithHiddenStage() {
     List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
-      .withOutputLanes("s")
-      .build();
+        .withOutputLanes("s")
+        .build();
     stages.add(source);
     StageConfiguration processor = new StageConfigurationBuilder("p", "hiddenProcessor")
-      .withInputLanes("s")
-      .withOutputLanes("p")
-      .build();
+        .withInputLanes("s")
+        .withOutputLanes("p")
+        .build();
     stages.add(processor);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("p")
-      .build();
+        .withInputLanes("p")
+        .build();
     stages.add(target);
 
     PipelineConfiguration pipelineConfiguration = pipeline(stages);
@@ -1569,50 +1569,50 @@ public class MockStages {
     List<StageConfiguration> stages = new ArrayList<>();
 
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
-      .withOutputLanes("s")
-      .build();
+        .withOutputLanes("s")
+        .build();
     stages.add(source);
 
     StageConfiguration processor1 = new StageConfigurationBuilder("p1", "processorName")
-      .withInputLanes("s")
-      .withOutputLanes("p1")
-      .build();
+        .withInputLanes("s")
+        .withOutputLanes("p1")
+        .build();
     stages.add(processor1);
 
     StageConfiguration processor2 = new StageConfigurationBuilder("p2", "processorName")
-      .withInputLanes("s")
-      .withOutputLanes("p2")
-      .build();
+        .withInputLanes("s")
+        .withOutputLanes("p2")
+        .build();
     stages.add(processor2);
 
     StageConfiguration processor3 = new StageConfigurationBuilder("p3", "processorName")
-      .withInputLanes("s")
-      .withOutputLanes("p3")
-      .build();
+        .withInputLanes("s")
+        .withOutputLanes("p3")
+        .build();
     stages.add(processor3);
 
     StageConfiguration processor4 = new StageConfigurationBuilder("p4", "processorName")
-      .withInputLanes("p1")
-      .withOutputLanes("p4")
-      .build();
+        .withInputLanes("p1")
+        .withOutputLanes("p4")
+        .build();
     stages.add(processor4);
 
     StageConfiguration processor5 = new StageConfigurationBuilder("p5", "processorName")
-      .withInputLanes("p2")
-      .withOutputLanes("p5")
-      .build();
+        .withInputLanes("p2")
+        .withOutputLanes("p5")
+        .build();
     stages.add(processor5);
 
     StageConfiguration processor6 = new StageConfigurationBuilder("p6", "processorName")
-      .withInputLanes("p2", "p3")
-      .withOutputLanes("p6")
-      .build();
+        .withInputLanes("p2", "p3")
+        .withOutputLanes("p6")
+        .build();
     stages.add(processor6);
 
 
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("p4", "p5", "p6")
-      .build();
+        .withInputLanes("p4", "p5", "p6")
+        .build();
     stages.add(target);
 
     return new PipelineConfiguration(
@@ -1636,17 +1636,17 @@ public class MockStages {
   public static PipelineConfiguration createPipelineConfigurationSourceOffsetCommitterProcessorTarget() {
     List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceOffsetCommitterName")
-      .withOutputLanes("s")
-      .build();
+        .withOutputLanes("s")
+        .build();
     stages.add(source);
     StageConfiguration processor = new StageConfigurationBuilder("p", "processorName")
-      .withInputLanes("s")
-      .withOutputLanes("p")
-      .build();
+        .withInputLanes("s")
+        .withOutputLanes("p")
+        .build();
     stages.add(processor);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("p")
-      .build();
+        .withInputLanes("p")
+        .build();
     stages.add(target);
     return pipeline(stages);
   }
@@ -1656,12 +1656,12 @@ public class MockStages {
     List<StageConfiguration> stages = new ArrayList<>();
 
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceWithConfigsName")
-      .withOutputLanes("a")
-      .build();
+        .withOutputLanes("a")
+        .build();
     stages.add(source);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("a")
-      .build();
+        .withInputLanes("a")
+        .build();
     stages.add(target);
     return pipeline(stages);
   }
@@ -1696,12 +1696,12 @@ public class MockStages {
   public static PipelineConfiguration createPipelineConfigurationSourceTarget() {
     List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
-      .withOutputLanes("a")
-      .build();
+        .withOutputLanes("a")
+        .build();
     stages.add(source);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("a")
-      .build();
+        .withInputLanes("a")
+        .build();
     stages.add(target);
     return pipeline(stages);
   }
@@ -1710,12 +1710,12 @@ public class MockStages {
   public static PipelineConfiguration createPipelineConfigurationPushSourceTarget() {
     List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfigurationBuilder("s", "pushSourceName")
-      .withOutputLanes("a")
-      .build();
+        .withOutputLanes("a")
+        .build();
     stages.add(source);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("a")
-      .build();
+        .withInputLanes("a")
+        .build();
     stages.add(target);
     return pipeline(stages);
   }
@@ -1723,16 +1723,16 @@ public class MockStages {
   public static PipelineConfiguration createPipelineConfigurationSourceTwoTargets() {
     List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
-      .withOutputLanes("a")
-      .build();
+        .withOutputLanes("a")
+        .build();
     stages.add(source);
     StageConfiguration target = new StageConfigurationBuilder("t1", "targetName")
-      .withInputLanes("a")
-      .build();
+        .withInputLanes("a")
+        .build();
     stages.add(target);
     target = new StageConfigurationBuilder("t2", "targetName")
-      .withInputLanes("a")
-      .build();
+        .withInputLanes("a")
+        .build();
     stages.add(target);
     return pipeline(stages);
   }
@@ -1741,25 +1741,25 @@ public class MockStages {
     List<StageConfiguration> stages = new ArrayList<>();
 
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceNameEvent")
-      .withOutputLanes("t")
-      .withEventLanes("e")
-      .build();
+        .withOutputLanes("t")
+        .withEventLanes("e")
+        .build();
     stages.add(source);
     StageConfiguration target = new StageConfigurationBuilder("t1", "targetName")
-      .withInputLanes("t")
-      .build();
+        .withInputLanes("t")
+        .build();
     stages.add(target);
     target = new StageConfigurationBuilder("t2", "targetName")
-      .withInputLanes("t")
-      .build();
+        .withInputLanes("t")
+        .build();
     stages.add(target);
     target = new StageConfigurationBuilder("t3", "targetName")
-      .withInputLanes("e")
-      .build();
+        .withInputLanes("e")
+        .build();
     stages.add(target);
     target = new StageConfigurationBuilder("t4", "targetName")
-      .withInputLanes("e")
-      .build();
+        .withInputLanes("e")
+        .build();
     stages.add(target);
     return pipeline(stages);
   }
@@ -1767,22 +1767,22 @@ public class MockStages {
   @SuppressWarnings("unchecked")
   public static PipelineConfiguration createPipelineConfigurationLifecycleEvents() {
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceNameEvent")
-      .withOutputLanes("t")
-      .build();
+        .withOutputLanes("t")
+        .build();
     StageConfiguration target = new StageConfigurationBuilder("t", "targetNameEvent")
-      .withInputLanes("t")
-      .build();
+        .withInputLanes("t")
+        .build();
 
     StageConfiguration startEvent = new StageConfigurationBuilder("start", "executorName")
-      .build();
+        .build();
 
     StageConfiguration stopEvent = new StageConfigurationBuilder("stop", "executorName")
-      .build();
+        .build();
 
     PipelineConfiguration pipelineConfiguration = pipeline(
-      ImmutableList.of(target, source),
-      ImmutableList.of(startEvent),
-      ImmutableList.of(stopEvent)
+        ImmutableList.of(target, source),
+        ImmutableList.of(startEvent),
+        ImmutableList.of(stopEvent)
     );
     return pipelineConfiguration;
   }
@@ -1790,24 +1790,24 @@ public class MockStages {
   @SuppressWarnings("unchecked")
   public static PipelineConfiguration createPipelineConfigurationLifecycleEventsIncorrect() {
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceNameEvent")
-      .withOutputLanes("t")
-      .build();
+        .withOutputLanes("t")
+        .build();
     StageConfiguration target = new StageConfigurationBuilder("t", "targetNameEvent")
-      .withInputLanes("t")
-      .build();
+        .withInputLanes("t")
+        .build();
 
     StageConfiguration startEvent = new StageConfigurationBuilder("start", "executorName")
-      .withInputLanes("startInput")
-      .build();
+        .withInputLanes("startInput")
+        .build();
 
     StageConfiguration stopEvent = new StageConfigurationBuilder("stop", "executorName")
-      .withEventLanes("stopEvent")
-      .build();
+        .withEventLanes("stopEvent")
+        .build();
 
     PipelineConfiguration pipelineConfiguration = pipeline(
-      ImmutableList.of(target, source),
-      ImmutableList.of(startEvent),
-      ImmutableList.of(stopEvent)
+        ImmutableList.of(target, source),
+        ImmutableList.of(startEvent),
+        ImmutableList.of(stopEvent)
     );
     return pipelineConfiguration;
   }
@@ -1816,12 +1816,12 @@ public class MockStages {
   public static PipelineConfiguration createPipelineConfigurationWithClusterOnlyStage(ExecutionMode executionMode) {
     List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfigurationBuilder("s", "clusterSource")
-      .withOutputLanes("a")
-      .build();
+        .withOutputLanes("a")
+        .build();
     stages.add(source);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withInputLanes("a")
-      .build();
+        .withInputLanes("a")
+        .build();
     stages.add(target);
     return new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
@@ -1831,8 +1831,8 @@ public class MockStages {
         "label",
         null,
         Arrays.asList(
-          new Config("executionMode", executionMode.name()),
-          new Config("retryAttempts", 3)
+            new Config("executionMode", executionMode.name()),
+            new Config("retryAttempts", 3)
         ),
         null,
         stages,
@@ -1846,16 +1846,16 @@ public class MockStages {
   public static PipelineConfiguration createPipelineWith2OffsetCommitController(ExecutionMode executionMode) {
     List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfigurationBuilder("s", "multiLaneSource")
-      .withOutputLanes("a", "b")
-      .build();
+        .withOutputLanes("a", "b")
+        .build();
     stages.add(source);
     StageConfiguration target1 = new StageConfigurationBuilder("t1", "offsetControlTarget")
-      .withInputLanes("a")
-      .build();
+        .withInputLanes("a")
+        .build();
     stages.add(target1);
     StageConfiguration target2 = new StageConfigurationBuilder("t2", "offsetControlTarget")
-      .withInputLanes("b")
-      .build();
+        .withInputLanes("b")
+        .build();
     stages.add(target2);
     return new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
@@ -1881,31 +1881,31 @@ public class MockStages {
   public static PipelineConfiguration createPipelineWithOffsetCommitController(ExecutionMode executionMode) {
     List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
-      .withOutputLanes("a")
-      .build();
+        .withOutputLanes("a")
+        .build();
     stages.add(source);
     StageConfiguration target2 = new StageConfigurationBuilder("t2", "offsetControlTarget")
-      .withInputLanes("a")
-      .build();
+        .withInputLanes("a")
+        .build();
     stages.add(target2);
     return new PipelineConfiguration(
-      PipelineStoreTask.SCHEMA_VERSION,
-      PipelineConfigBean.VERSION,
+        PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
         "pipelineId",
-      UUID.randomUUID(),
+        UUID.randomUUID(),
         "label",
         null,
-      Arrays.asList(
-        new Config("executionMode",executionMode.name()),
-        new Config("retryAttempts", 3),
-        new Config("deliveryGuarantee", DeliveryGuarantee.AT_MOST_ONCE)
-      ),
-      null,
-      stages,
-      getErrorStageConfig(),
-      getStatsAggregatorStageConfig(),
-      Collections.emptyList(),
-      Collections.emptyList()
+        Arrays.asList(
+            new Config("executionMode",executionMode.name()),
+            new Config("retryAttempts", 3),
+            new Config("deliveryGuarantee", DeliveryGuarantee.AT_MOST_ONCE)
+        ),
+        null,
+        stages,
+        getErrorStageConfig(),
+        getStatsAggregatorStageConfig(),
+        Collections.emptyList(),
+        Collections.emptyList()
     );
   }
 
@@ -1913,16 +1913,16 @@ public class MockStages {
   public static PipelineConfiguration createPipelineConfTargetWithReqField() {
     List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
-      .withOutputLanes("a")
-      .build();
+        .withOutputLanes("a")
+        .build();
     stages.add(source);
 
     // Create target with empty value for the required field "requiredFieldConfName".
     //Empty value simulates providing a value and then deleting it
     StageConfiguration target = new StageConfigurationBuilder("t", "targetWithReqField")
-      .withConfig(new Config("requiredFieldConfName", ""))
-      .withInputLanes("a")
-      .build();
+        .withConfig(new Config("requiredFieldConfName", ""))
+        .withInputLanes("a")
+        .build();
     stages.add(target);
     return pipeline(stages);
   }
@@ -1948,13 +1948,13 @@ public class MockStages {
   public static PipelineConfiguration createPipelineConfigurationSourceTargetWithRequiredFields() {
     List<StageConfiguration> stages = new ArrayList<>();
     StageConfiguration source = new StageConfigurationBuilder("s", "sourceName")
-      .withOutputLanes("a")
-      .build();
+        .withOutputLanes("a")
+        .build();
     stages.add(source);
     StageConfiguration target = new StageConfigurationBuilder("t", "targetName")
-      .withConfig(new Config("stageRequiredFields", Arrays.asList("dummy")))
-      .withInputLanes("a")
-      .build();
+        .withConfig(new Config("stageRequiredFields", Arrays.asList("dummy")))
+        .withInputLanes("a")
+        .build();
     stages.add(target);
     return pipeline(stages);
   }
@@ -1964,9 +1964,9 @@ public class MockStages {
   }
 
   private static PipelineConfiguration pipeline(
-    List<StageConfiguration> stages,
-    List<StageConfiguration> startStages,
-    List<StageConfiguration> stopStages
+      List<StageConfiguration> stages,
+      List<StageConfiguration> startStages,
+      List<StageConfiguration> stopStages
   ) {
     return new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,

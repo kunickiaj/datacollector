@@ -17,13 +17,15 @@ package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.main.RuntimeInfo;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 
 
 public class TestMultiplexerPipe {
@@ -35,8 +37,8 @@ public class TestMultiplexerPipe {
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Pipeline pipeline = new MockPipelineBuilder()
-      .withPipelineConf(MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed())
-      .build(pipelineRunner);
+        .withPipelineConf(MockStages.createPipelineConfigurationSourceTargetWithEventsProcessed())
+        .build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getRunners().get(0).get(1);
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
@@ -52,8 +54,8 @@ public class TestMultiplexerPipe {
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Pipeline pipeline = new MockPipelineBuilder()
-      .withPipelineConf(MockStages.createPipelineConfigurationSourceTwoTargets())
-      .build(pipelineRunner);
+        .withPipelineConf(MockStages.createPipelineConfigurationSourceTwoTargets())
+        .build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getRunners().get(0).get(1);
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
@@ -67,15 +69,15 @@ public class TestMultiplexerPipe {
     PipelineRunner pipelineRunner = Mockito.mock(PipelineRunner.class);
     Mockito.when(pipelineRunner.getMetrics()).thenReturn(new MetricRegistry());
     Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
-        Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
+    Mockito.when(pipelineRunner.getRuntimeInfo()).thenReturn(Mockito.mock(RuntimeInfo.class));
     Pipeline pipeline = new MockPipelineBuilder()
-      .withPipelineConf(MockStages.createPipelineConfigurationSourceTwoTargetsTwoEvents())
-      .build(pipelineRunner);
+        .withPipelineConf(MockStages.createPipelineConfigurationSourceTwoTargetsTwoEvents())
+        .build(pipelineRunner);
     MultiplexerPipe pipe = (MultiplexerPipe) pipeline.getRunners().get(0).get(1);
     PipeBatch pipeBatch = Mockito.mock(FullPipeBatch.class);
     pipe.process(pipeBatch);
-    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("t::o"), argThat(list -> list.containsAll(Arrays.asList("t--t1::s::m", "t--t2::s::m"))));
-    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("e::o"), argThat(list -> list.containsAll(Arrays.asList("e--t3::s::m", "e--t4::s::m"))));
+    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("t::o"), (List<String>)argThat(contains("t--t1::s::m", "t--t2::s::m")));
+    Mockito.verify(pipeBatch, Mockito.times(1)).moveLaneCopying(eq("e::o"), (List<String>)argThat(contains("e--t3::s::m", "e--t4::s::m")));
     Mockito.verifyNoMoreInteractions(pipeBatch);
   }
 

@@ -26,7 +26,11 @@ allprojects {
     dependencies {
       compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
       testCompile 'junit:junit:4.12'
-      testCompile 'org.mockito:mockito-core:1.10.19'
+      // powermock-api-mockito-common includes both mockito 1.x and 2.x and until we migrate
+      // to Mockito 2.x across the board we need to force the correct version.
+      testCompile('org.mockito:mockito-core:1.10.19') {
+        force = true
+      }
     }
   }
 
@@ -173,6 +177,7 @@ distributions {
       into('etc') {
         from 'container/src/main/resources/sdc-log4j.properties-default'
         rename 'sdc-log4j.properties-default', 'sdc-log4j.properties'
+        filter(ReplaceTokens, tokens: ['sdc.log4j.level': 'DEBUG']) // TODO add release setup with INFO
       }
       // Empty directories
       into('') {

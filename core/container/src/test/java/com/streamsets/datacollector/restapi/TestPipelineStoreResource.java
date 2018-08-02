@@ -66,7 +66,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.ArgumentMatchers;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -624,7 +624,7 @@ public class TestPipelineStoreResource extends JerseyTest {
                 noPerm
             ));
 
-        Mockito.when(pipelineStore.getInfo(ArgumentMatchers.matches("xyz|myPipeline|newFromImport"))).thenReturn(
+        Mockito.when(pipelineStore.getInfo(Matchers.matches("xyz|myPipeline|newFromImport"))).thenReturn(
             new PipelineInfo(
                 "xyz",
                 "label",
@@ -652,9 +652,9 @@ public class TestPipelineStoreResource extends JerseyTest {
             new com.streamsets.datacollector.store.PipelineRevInfo(new PipelineInfo("xyz","label",
                 "xyz description", new java.util.Date(0), new java.util.Date(0), "xyz creator",
                 "xyz lastModifier", "1", UUID.randomUUID(), true, null, "x", "y"))));
-        Mockito.when(pipelineStore.load(ArgumentMatchers.matches("xyz|myPipeline|newFromImport|readOnly"), Mockito.anyString()))
+        Mockito.when(pipelineStore.load(Matchers.matches("xyz|myPipeline|newFromImport|readOnly"), Mockito.anyString()))
             .thenReturn(MockStages.createPipelineConfigurationSourceProcessorTarget());
-        Mockito.when(pipelineStore.load(ArgumentMatchers.matches("abc|def"), ArgumentMatchers.matches("0"))).thenReturn(
+        Mockito.when(pipelineStore.load(Matchers.matches("abc|def"), Matchers.matches("0"))).thenReturn(
             MockStages.createPipelineConfigurationWithLabels(new ArrayList<String>()));
         Mockito.when(pipelineStore.create("user1", "myPipeline", "myPipeline", "my description", false, false)).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
@@ -662,12 +662,12 @@ public class TestPipelineStoreResource extends JerseyTest {
         Mockito.doThrow(new PipelineStoreException(ContainerError.CONTAINER_0200, "xyz"))
             .when(pipelineStore).delete("xyz");
         Mockito.when(pipelineStore.save(
-            ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString(),
-            ArgumentMatchers.any())).thenReturn(
+            Matchers.anyString(), Matchers.anyString(), Matchers.anyString(), Matchers.anyString(),
+            (com.streamsets.datacollector.config.PipelineConfiguration)Matchers.any())).thenReturn(
             MockStages.createPipelineConfigurationSourceProcessorTarget());
         Mockito.when(pipelineStore.save(
-            ArgumentMatchers.anyString(), ArgumentMatchers.matches("abc|def"), ArgumentMatchers.matches("0"), ArgumentMatchers.anyString(),
-            ArgumentMatchers.any())).thenReturn(
+            Matchers.anyString(), Matchers.matches("abc|def"), Matchers.matches("0"), Matchers.anyString(),
+            (com.streamsets.datacollector.config.PipelineConfiguration)Matchers.any())).thenReturn(
             MockStages.createPipelineConfigurationWithLabels(Arrays.asList("foo", "bar")));
 
         List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons = new ArrayList<>();
@@ -711,9 +711,9 @@ public class TestPipelineStoreResource extends JerseyTest {
         }
         try {
           Mockito.when(pipelineStore.storeRules(
-              ArgumentMatchers.anyString(),
-              ArgumentMatchers.anyString(),
-              (com.streamsets.datacollector.config.RuleDefinitions) ArgumentMatchers.any(),
+              Matchers.anyString(),
+              Matchers.anyString(),
+              (com.streamsets.datacollector.config.RuleDefinitions) Matchers.any(),
               Mockito.anyBoolean()
           )).thenReturn(rules.getRuleDefinitions());
         } catch (PipelineStoreException e) {

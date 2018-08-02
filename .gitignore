@@ -6,7 +6,9 @@
 target
 
 # Gradle
-**/build
+build
+out
+.gradle
 
 # VS Code
 .vscode
