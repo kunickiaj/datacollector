@@ -8,16 +8,15 @@ dependencies {
   compile project(':lib:proto:kafka_source-protolib')
   testCompile group: 'junit', name: 'junit', version: '4.12'
   testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
-  testCompile(group: 'org.apache.kafka', name: 'kafka_2.11', version: '0.10.0.0') {
-    exclude(module: 'zookeeper')
-  }
-  testCompile(group: 'org.apache.kafka', name: 'kafka_2.11', version: '0.10.0.0', classifier: 'test') {
-    exclude(module: 'zookeeper')
-  }
+  testCompile(group: 'org.apache.kafka', name: 'kafka_2.11', version: '0.10.0.0')
+  testCompile(group: 'org.apache.kafka', name: 'kafka_2.11', version: '0.10.0.0', classifier: 'test')
   testCompile group: 'org.apache.kafka', name: 'kafka-clients', version: '0.10.0.0', classifier: 'test'
-  testCompile project(':lib:kafka:kafka-common')
-  testCompile project(':lib:kafka:sdc-kafka-10')
-  testCompile project(':lib:kafka:sdc-kafka-10')
+  testCompile project(path: ':lib:kafka:kafka-common', configuration: 'testArtifacts')
+  testCompile project(':core:utils')
+  testCompile project(':lib:kafka:sdc-kafka_0_10')
+  testCompile(project(path: ':lib:kafka:sdc-kafka_0_10', configuration: 'testArtifacts')) {
+    exclude module: 'lib:kafka:sdc-kafka_0_9'
+  }
   testCompile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.57'
   testCompile group: 'com.h2database', name: 'h2', version: '1.4.187'
   compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
@@ -26,4 +25,5 @@ dependencies {
   compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
   testCompile project(':core:sdk')
   compileOnly project(':core:cluster:cluster-bootstrap-api')
+  testCompile project(':core:cluster:cluster-bootstrap-api')
 }

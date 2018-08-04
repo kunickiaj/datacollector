@@ -25,11 +25,15 @@ allprojects {
   plugins.withType(JavaPlugin) {
     dependencies {
       compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
+      testCompile project(':core:testing')
       testCompile 'junit:junit:4.12'
       // powermock-api-mockito-common includes both mockito 1.x and 2.x and until we migrate
       // to Mockito 2.x across the board we need to force the correct version.
       testCompile('org.mockito:mockito-core:1.10.19') {
         force = true
+      }
+      constraints {
+        testCompile('org.testcontainers:testcontainers:1.4.3')
       }
     }
   }
@@ -53,9 +57,9 @@ allprojects {
   }
 }
 
+// Configuration common to all subprojects
 subprojects {
   apply plugin: 'java'
-  apply plugin: 'scala'
 
   // Used for packaging stage libraries. the java-library-distribution plugin puts only runtime deps in the lib dir
   apply plugin: 'distribution'
@@ -67,13 +71,21 @@ subprojects {
   compileJava.dependsOn += processResources
   compileTestJava.dependsOn += processTestResources
 
-  // The current annotation processor expects a slightly different configuration, as determined by the maven resources plugin
-  sourceSets {
-    main {
-      output.resourcesDir = "$buildDir/classes/java/$name"
-    }
-    test {
-      output.resourcesDir = "$buildDir/classes/java/$name"
+  // Dependencies provided to all projects
+  dependencies {
+    // Standard 'provided' dependencies -- container provides these.
+    compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+    compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
+    compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
+    compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
+    compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
+
+    testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
+
+    def powermockVersion = '1.7.3'
+    constraints {
+      testImplementation group: 'org.powermock', name: 'powermock-api-mockito', version: powermockVersion
+      testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
     }
   }
 }
@@ -83,42 +95,32 @@ def coreStageLibraryNames = [
     "dataformats-lib"
 ]
 
-def allStageLibraryNames = coreStageLibraryNames + [
-    "aws-lib"
-]
-
 def coreStageLibraries = subprojects.findAll { coreStageLibraryNames.contains(it.name) }
-def allStageLibraries = subprojects.findAll { allStageLibraryNames.contains(it.name) }
+def allStageLibraries = subprojects.findAll { it.path.contains(":stage") }
 def protolibs = subprojects.findAll { it.name.contains("protolib") }
 
 configure(allStageLibraries + protolibs) {
-  // All stage libraries depend on these
   dependencies {
-    // Standard 'provided' dependencies -- container provides these.
-    compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
-    compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'
-    compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
-    compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
-    compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
-
     // Common dependencies required for test compilation
-    testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
     testCompile project(':core:sdk')
     testCompile 'org.awaitility:awaitility:2.0.0'
   }
-  // Used for packaging stage libraries. the java-library-distribution plugin puts only runtime deps in the lib dir
-  // It extends the distribution plugin so we simply reconfigure the distribution plugin ourselves
-  // ref: https://discuss.gradle.org/t/usage-of-distribution-plugin/12874/6
-  distributions {
-    distZip.enabled = false
+
+  // Our API annotation processor expects to load resources from the compilation output, even though its
+  // tasked with processing resources (stage icons). In order to give them access, the resources for stage
+  // libraries are copied to the classes output path.
+  sourceSets {
     main {
-      contents {
-        into('lib') {
-          from jar // the stage library jar
-          from(project.configurations.runtime) // the runtime dependencies
-        }
-      }
+      output.resourcesDir = "$buildDir/classes/java/$name"
     }
+    test {
+      output.resourcesDir = "$buildDir/classes/java/$name"
+    }
+  }
+  // When changing the resource output dir above, resources will get added as duplicate entries in the jar files
+  // so we enable the EXCLUDE strategy to avoid adding them twice.
+  jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
   }
 }
 
@@ -130,7 +132,6 @@ configurations {
 }
 
 dependencies {
-  rootClasspath "org.xerial.snappy:snappy-java:1.0.5"
   api(
       "com.streamsets:streamsets-datacollector-api:$version",
       "org.slf4j:jul-to-slf4j:1.7.7"
@@ -143,6 +144,7 @@ dependencies {
       project(':lib:stage:basic-lib'),
       project(':core:dataformats-lib'),
   )
+  rootClasspath "org.xerial.snappy:snappy-java:1.0.5"
 }
 
 apply plugin: 'distribution'

@@ -2,6 +2,7 @@ description = 'StreamSets Data Collector Cluster common'
 dependencies {
   compile project(':lib:commonlib')
   testCompile group: 'junit', name: 'junit', version: '4.12'
+  testCompile project(':core:bootstrap')
   testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
   compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
   compileOnly group: 'log4j', name: 'log4j', version: '1.2.17'

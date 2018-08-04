@@ -1,0 +1,16 @@
+subprojects {
+  // Used for packaging stage libraries. the java-library-distribution plugin puts only runtime deps in the lib dir
+  // It extends the distribution plugin so we simply reconfigure the distribution plugin ourselves
+  // ref: https://discuss.gradle.org/t/usage-of-distribution-plugin/12874/6
+  distributions {
+    distZip.enabled = false
+    main {
+      contents {
+        into('lib') {
+          from jar // the stage library jar
+          from(project.configurations.runtime) // the runtime dependencies
+        }
+      }
+    }
+  }
+}

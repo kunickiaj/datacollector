@@ -413,7 +413,7 @@ public class TestTCPServerSource {
     for (int i = 0; i < batchSize; i++) {
       AvroFlumeEvent avroEvent = new AvroFlumeEvent();
 
-      avroEvent.setHeaders(new HashMap<CharSequence, CharSequence>());
+      avroEvent.setHeaders(new HashMap<>());
       avroEvent.setBody(ByteBuffer.wrap(getFlumeAvroIpcEventName(i).getBytes()));
       events.add(avroEvent);
     }

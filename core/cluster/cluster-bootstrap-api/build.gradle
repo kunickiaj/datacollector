@@ -1,4 +1,6 @@
 description = 'StreamSets Data Collector Cluster Bootstrap API'
+apply plugin: 'scala'
+
 dependencies {
   compile project(':core:bootstrap')
   compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'
@@ -16,4 +18,6 @@ dependencies {
   compileOnly group: 'org.apache.avro', name: 'avro', version: '1.7.7'
   compileOnly group: 'org.apache.spark', name: 'spark-streaming_2.11', version: '2.1.0'
   compileOnly group: 'org.apache.kafka', name: 'kafka-clients', version: '0.8.2.0'
+  testCompile group: 'org.apache.hadoop', name: 'hadoop-common', version: '2.6.0'
+  testCompile group: 'org.apache.hadoop', name: 'hadoop-hdfs', version: '2.6.0'
 }
