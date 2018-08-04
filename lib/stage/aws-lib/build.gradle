@@ -28,7 +28,7 @@ dependencies {
   compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
   compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
   compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
-  testCompile project(':core:sdk')
+
 
   testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
   testCompile 'org.powermock:powermock-module-junit4:1.7.3'

@@ -19,7 +19,7 @@ dependencies {
     exclude(module: 'metrics-core')
     exclude(module: 'servlet-api')
   }
-  testCompile project(':core:sdk')
+
   testCompile project(':lib:commonlib')
   testCompile(group: 'org.apache.hadoop', name: 'hadoop-client', version: '2.7.0-mapr-1506')
 }

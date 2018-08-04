@@ -1,4 +1,7 @@
 subprojects {
+  // Used for packaging stage libraries. the distribution plugin puts only runtime deps in the lib dir
+  apply plugin: 'distribution'
+
   // Used for packaging stage libraries. the java-library-distribution plugin puts only runtime deps in the lib dir
   // It extends the distribution plugin so we simply reconfigure the distribution plugin ourselves
   // ref: https://discuss.gradle.org/t/usage-of-distribution-plugin/12874/6
@@ -11,6 +14,18 @@ subprojects {
           from(project.configurations.runtime) // the runtime dependencies
         }
       }
+    }
+  }
+
+  distTar {
+//    compression = Compression.GZIP
+//    extension = 'tgz'
+    archiveName = "streamsets-datacollector-${baseName}-${version}.${extension}"
+  }
+
+  task printRuntime {
+    doLast {
+      project.configurations.runtime.each { println it }
     }
   }
 }

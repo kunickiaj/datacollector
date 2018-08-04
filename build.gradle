@@ -24,7 +24,7 @@ allprojects {
   // Add JUnit to test scope for ll projects using the Java plugin
   plugins.withType(JavaPlugin) {
     dependencies {
-      compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
+      compileOnly group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.0'
       testCompile project(':core:testing')
       testCompile 'junit:junit:4.12'
       // powermock-api-mockito-common includes both mockito 1.x and 2.x and until we migrate
@@ -61,9 +61,6 @@ allprojects {
 subprojects {
   apply plugin: 'java'
 
-  // Used for packaging stage libraries. the java-library-distribution plugin puts only runtime deps in the lib dir
-  apply plugin: 'distribution'
-
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
 
@@ -88,6 +85,12 @@ subprojects {
       testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
     }
   }
+
+  jar {
+    // preserve backward compatibility with jar naming, even though we shortened the
+    // source code directory names for readability.
+    baseName = "streamsets-datacollector-${baseName}"
+  }
 }
 
 def coreStageLibraryNames = [
@@ -96,13 +99,13 @@ def coreStageLibraryNames = [
 ]
 
 def coreStageLibraries = subprojects.findAll { coreStageLibraryNames.contains(it.name) }
-def allStageLibraries = subprojects.findAll { it.path.contains(":stage") }
+def allStageLibraries = subprojects.findAll { it.path.contains(":stage:") }
 def protolibs = subprojects.findAll { it.name.contains("protolib") }
 
 configure(allStageLibraries + protolibs) {
   dependencies {
+    compileOnly project(':core:sdk')
     // Common dependencies required for test compilation
-    testCompile project(':core:sdk')
     testCompile 'org.awaitility:awaitility:2.0.0'
   }
 
@@ -151,8 +154,12 @@ apply plugin: 'distribution'
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
+// Disable creation of zips, we currently only ship tarballs
+tasks.withType(Zip) {
+  enabled = false
+}
+
 distributions {
-  distZip.enabled = false
   core {
     baseName = 'streamsets-datacollector-core'
     contents {
@@ -177,7 +184,7 @@ distributions {
       }
       // Default logging configuration
       into('etc') {
-        from 'container/src/main/resources/sdc-log4j.properties-default'
+        from new File(project(':core:container').buildDir, 'resources/main/sdc-log4j.properties-default')
         rename 'sdc-log4j.properties-default', 'sdc-log4j.properties'
         filter(ReplaceTokens, tokens: ['sdc.log4j.level': 'DEBUG']) // TODO add release setup with INFO
       }
@@ -206,7 +213,7 @@ distributions {
         from project(':core:cluster:mesos-bootstrap').jar
       }
       into('cli-lib') {
-        from 'cli/build/libs'
+        from project(':core:cli').jar
       }
       into('container-lib') {
         from configurations.container
@@ -216,12 +223,11 @@ distributions {
       }
       // The UI
       into('sdc-static-web') {
-//        from 'ui/common-ui/src/main/webapp'
-        from 'ui/datacollector-ui/target/dist'
+        from new File(project(':ui:datacollector-ui').projectDir, 'target/dist')
       }
       // TODO: include docs
       coreStageLibraries.forEach { library ->
-        into("streamsets-libs/${library.name}/lib") {
+        into("streamsets-libs/streamsets-datacollector-${library.name}/lib") {
           from library.tasks.withType(Jar)// the stage library jar
           from(library.configurations.runtime) // the runtime dependencies
         }

@@ -6,12 +6,6 @@ dependencies {
   compile group: 'commons-io', name: 'commons-io', version: '2.4'
   compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
   compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
-  testCompile group: 'junit', name: 'junit', version: '4.12'
-  testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
   testCompile project(':core:testing')
   testCompile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.8.9'
-  testCompile group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
-  compileOnly group: 'com.streamsets', name: 'streamsets-datacollector-api', version: '3.5.0-SNAPSHOT'
-  compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
-  compileOnly group: 'io.dropwizard.metrics', name: 'metrics-core', version: '3.1.2'
 }

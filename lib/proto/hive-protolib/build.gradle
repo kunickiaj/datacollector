@@ -45,7 +45,7 @@ dependencies {
   }
   compileOnly group: 'org.slf4j', name: 'slf4j-api', version: '1.7.7'
   compileOnly group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.7'
-  testCompile project(':core:sdk')
+
   testCompile project(':core:testing')
   testCompile project(':lib:commonlib')
   testCompile project(':lib:proto:hdfs-protolib')

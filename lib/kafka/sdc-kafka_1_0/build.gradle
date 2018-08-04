@@ -12,7 +12,7 @@ dependencies {
   testCompile group: 'junit', name: 'junit', version: '4.12'
   testCompile group: 'org.mockito', name: 'mockito-core', version: '1.10.19'
   testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
-  testCompile project(':core:sdk')
+
   testCompile group: 'org.apache.kafka', name: 'kafka_2.11', version: '1.0.0', classifier: 'test'
   testCompile group: 'org.apache.kafka', name: 'kafka-clients', version: '1.0.0', classifier: 'test'
   testCompile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.57'
