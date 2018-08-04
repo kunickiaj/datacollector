@@ -45,7 +45,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class TestWorkbookParser {
   WorkbookParserSettings settingsNoHeader;
@@ -60,7 +59,8 @@ public class TestWorkbookParser {
   }
 
   private Workbook createWorkbook(String filePath) throws IOException, InvalidFormatException {
-    return WorkbookFactory.create(getFile(filePath));
+    InputStream f = getFile(filePath);
+    return WorkbookFactory.create(f);
   }
 
   private Stage.Context getContext() {

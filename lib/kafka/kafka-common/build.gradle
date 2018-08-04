@@ -13,6 +13,7 @@ dependencies {
   compileOnly group: 'org.apache.kafka', name: 'kafka_2.10', version: '0.8.1.1'
   testCompile group: 'org.apache.kafka', name: 'kafka_2.10', version: '0.8.1.1'
   testCompile group: 'org.apache.kafka', name: 'kafka_2.10', version: '0.8.1.1', classifier: 'test'
+  testCompile project(':core:sdk')
   testCompile project(':core:testing')
 }
 

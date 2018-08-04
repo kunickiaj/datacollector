@@ -3,6 +3,7 @@ description = 'StreamSets Data Collector Directory Spooler ProtoLib'
 dependencies {
   compile project(':core:common')
   compile project(':lib:commonlib')
+  testCompile project(':core:sdk')
   testCompile project(':lib:commonlib')
   testCompile group: 'org.powermock', name: 'powermock-api-mockito'
   testCompile group: 'org.powermock', name: 'powermock-module-junit4'

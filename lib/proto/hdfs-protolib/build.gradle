@@ -3,6 +3,7 @@ dependencies {
   compile project(':core:common')
   compile project(':core:hadoop-common')
   compile project(':lib:commonlib')
+  testCompile project(':core:sdk')
   compile project(':lib:proto:dir-spooler-protolib')
   compile group: 'io.confluent', name: 'kafka-schema-registry-client', version: '3.0.1'
   compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.1.0'

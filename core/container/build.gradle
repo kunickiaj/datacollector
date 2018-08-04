@@ -115,7 +115,7 @@ compileTestJava {
 }
 
 test {
-  jvmArgs "-javaagent:${buildDir}/agents/bootstrap-${version}.jar", "-Dsun.net.http.allowRestrictedHeaders=true"
+  jvmArgs "-javaagent:${buildDir}/agents/streamsets-datacollector-bootstrap-${version}.jar", "-Dsun.net.http.allowRestrictedHeaders=true"
   systemProperty 'streamsets.test.mode', 'true'
 }
 
