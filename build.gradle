@@ -235,3 +235,6 @@ distributions {
     }
   }
 }
+
+// ensure building the UI before we start packaging
+coreDistTar.dependsOn ':ui:datacollector-ui:build'
