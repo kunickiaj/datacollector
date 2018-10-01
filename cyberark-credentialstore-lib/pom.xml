@@ -36,7 +36,7 @@
   <properties>
     <slf4j.version>1.7.7</slf4j.version>
     <junit.version>4.12</junit.version>
-    <mockito.version>1.10.19</mockito.version>
+    <mockito.version>2.22.0</mockito.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     <guava.version>18.0</guava.version>

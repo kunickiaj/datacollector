@@ -394,6 +394,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   }
 
   Properties loadClasspathWhitelist(ClassLoader cl) {
+    System.err.println("ADAM Loading: " + cl.toString() + " " + PROPERTIES_CP_WHITELIST);
    try (InputStream is = cl.getResourceAsStream(PROPERTIES_CP_WHITELIST)) {
       if (is != null) {
         Properties props = new Properties();

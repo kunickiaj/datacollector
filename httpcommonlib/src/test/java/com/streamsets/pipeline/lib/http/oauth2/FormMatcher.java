@@ -20,7 +20,7 @@ import org.mockito.ArgumentMatcher;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
 
-class FormMatcher extends ArgumentMatcher<Entity<Form>> {
+class FormMatcher implements ArgumentMatcher<Entity<Form>> {
 
   private final Form expectedForm;
 
@@ -28,12 +28,8 @@ class FormMatcher extends ArgumentMatcher<Entity<Form>> {
     this.expectedForm = expected.getEntity();
   }
 
-  @SuppressWarnings("unchecked")
   @Override
-  public boolean matches(Object argument) {
-    if (argument == null || !(argument instanceof Entity) || !(((Entity) argument).getEntity() instanceof Form)) {
-      return false;
-    }
-    return expectedForm.asMap().equalsIgnoreValueOrder(((Entity<Form>)argument).getEntity().asMap());
+  public boolean matches(Entity<Form> argument) {
+    return expectedForm.asMap().equalsIgnoreValueOrder(argument.getEntity().asMap());
   }
 }

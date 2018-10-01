@@ -55,14 +55,14 @@
     <log4j.version>1.2.17</log4j.version>
     <slf4j.version>1.7.7</slf4j.version>
     <protobuf.version>3.3.1</protobuf.version>
-    <surefire.version>2.19.1</surefire.version>
-    <failsafe.version>2.19.1</failsafe.version>
+    <surefire.version>2.22.0</surefire.version>
+    <failsafe.version>2.22.0</failsafe.version>
     <junit.version>4.12</junit.version>
     <hamcrest.version>1.3</hamcrest.version>
-    <mockito.version>1.10.19</mockito.version>
-    <powermock.version>1.7.3</powermock.version>
+    <mockito.version>2.22.0</mockito.version>
+    <powermock.version>1.7.4</powermock.version>
     <jackson.version>2.8.9</jackson.version>
-    <jacoco.version>0.7.7.201606060606</jacoco.version>
+    <jacoco.version>0.8.2</jacoco.version>
     <hikaricp.version>2.4.1</hikaricp.version>
     <jersey.version>2.25.1</jersey.version>
     <!-- Sets the VM argument line used when unit and integration tests are run. -->
@@ -78,6 +78,10 @@
 
     <hive-storage-api.version>2.2.1</hive-storage-api.version>
     <streamsets-datacollector-rbgen-maven-plugin.version>3.6.0-SNAPSHOT</streamsets-datacollector-rbgen-maven-plugin.version>
+
+    <!-- for error prone -->
+    <javac.version>9+181-r4173-1</javac.version>
+
   </properties>
 
   <!-- API dependencies ONLY -->
@@ -130,7 +134,7 @@
       </dependency>
       <dependency>
         <groupId>org.powermock</groupId>
-        <artifactId>powermock-api-mockito</artifactId>
+        <artifactId>powermock-api-mockito2</artifactId>
         <version>${powermock.version}</version>
       </dependency>
       <dependency>
@@ -285,12 +289,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>2.6</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-enforcer-plugin</artifactId>
-          <version>1.3.1</version>
+          <version>3.0.0-M2</version>
           <configuration>
             <rules>
               <requireMavenVersion>
@@ -315,7 +319,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.6.1</version>
+          <version>3.8.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.hadoop</groupId>
@@ -447,12 +451,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.10.1</version>
+          <version>3.0.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-shade-plugin</artifactId>
-          <version>2.3</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -514,7 +518,7 @@
         <plugin>
           <groupId>net.alchim31.maven</groupId>
           <artifactId>scala-maven-plugin</artifactId>
-          <version>3.3.2</version>
+          <version>3.4.2</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -548,15 +552,48 @@
           </execution>
         </executions>
       </plugin>
+      <!--<plugin>-->
+        <!--<groupId>org.apache.maven.plugins</groupId>-->
+        <!--<artifactId>maven-compiler-plugin</artifactId>-->
+        <!--<configuration>-->
+          <!--<compilerId>javac-with-errorprone</compilerId>-->
+          <!--<forceJavacCompilerUse>true</forceJavacCompilerUse>-->
+          <!--<source>${javaVersion}</source>-->
+          <!--<target>${javaVersion}</target>-->
+          <!--<compilerArgs>-->
+            <!--&lt;!&ndash; Disables Javadoc failures for new strict Java 8 rules &ndash;&gt;-->
+            <!--<arg>-Xdoclint:none</arg>-->
+            <!--&lt;!&ndash; We need to clean up SDC project a bit more before enabling this-->
+            <!--<arg>-Xlint:unchecked</arg>-->
+            <!--<arg>-Xlint:deprecation</arg>-->
+            <!--&ndash;&gt;-->
+          <!--</compilerArgs>-->
+        <!--</configuration>-->
+        <!--<dependencies>-->
+          <!--<dependency>-->
+            <!--<groupId>org.codehaus.plexus</groupId>-->
+            <!--<artifactId>plexus-compiler-javac-errorprone</artifactId>-->
+            <!--<version>2.8</version>-->
+          <!--</dependency>-->
+          <!--&lt;!&ndash; override plexus-compiler-javac-errorprone's dependency on-->
+               <!--Error Prone with the latest version &ndash;&gt;-->
+          <!--<dependency>-->
+            <!--<groupId>com.google.errorprone</groupId>-->
+            <!--<artifactId>error_prone_core</artifactId>-->
+            <!--<version>2.0.19</version>-->
+          <!--</dependency>-->
+        <!--</dependencies>-->
+      <!--</plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
         <configuration>
-          <compilerId>javac-with-errorprone</compilerId>
-          <forceJavacCompilerUse>true</forceJavacCompilerUse>
-          <source>${javaVersion}</source>
-          <target>${javaVersion}</target>
+          <source>8</source>
+          <target>8</target>
           <compilerArgs>
+            <arg>-XDcompilePolicy=simple</arg>
+            <arg>-Xplugin:ErrorProne</arg>
             <!-- Disables Javadoc failures for new strict Java 8 rules -->
             <arg>-Xdoclint:none</arg>
             <!-- We need to clean up SDC project a bit more before enabling this
@@ -564,21 +601,14 @@
             <arg>-Xlint:deprecation</arg>
             -->
           </compilerArgs>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>com.google.errorprone</groupId>
+              <artifactId>error_prone_core</artifactId>
+              <version>2.3.1</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-compiler-javac-errorprone</artifactId>
-            <version>2.8</version>
-          </dependency>
-          <!-- override plexus-compiler-javac-errorprone's dependency on
-               Error Prone with the latest version -->
-          <dependency>
-            <groupId>com.google.errorprone</groupId>
-            <artifactId>error_prone_core</artifactId>
-            <version>2.0.19</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -596,6 +626,26 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>jdk8</id>
+      <activation>
+        <jdk>1.8</jdk>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <fork>true</fork>
+              <compilerArgs combine.children="append">
+                <arg>-J-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${javac.version}/javac-${javac.version}.jar</arg>
+              </compilerArgs>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>rbgen</id>
       <activation>

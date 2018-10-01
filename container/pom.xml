@@ -40,6 +40,14 @@
   </properties>
 
   <dependencies>
+    <!-- Java 11 removed modules per JEP-320 -->
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+      <version>2.4.0-b180830.0438</version>
+    </dependency>
+
+    <!-- End Java 11 -->
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-container-common</artifactId>
@@ -120,7 +128,7 @@
     </dependency>
     <dependency>
       <groupId>org.powermock</groupId>
-      <artifactId>powermock-api-mockito</artifactId>
+      <artifactId>powermock-api-mockito2</artifactId>
       <version>${powermock.version}</version>
       <scope>test</scope>
     </dependency>
@@ -449,7 +457,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.1</version>
+        <version>3.8.0</version>
         <configuration>
           <!-- flagging the PipelineAnnotationsProcessor to skip processing -->
           <compilerArgument>-Astreamsets.datacollector.annotationsprocessor.skip</compilerArgument>

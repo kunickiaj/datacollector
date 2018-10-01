@@ -35,12 +35,12 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -160,7 +160,7 @@ public final class ExceptionIT extends BaseTableJdbcSourceIT {
         SQLException sqlException = (SQLException) args[0];
         Assert.assertEquals(EXCEPTION_MESSAGE, sqlException.getMessage());
         int expectedExceptionHappenedTimes = exceptionHappenedTimes.getAndIncrement();
-        int actualExceptionHappenedTimes = (Integer) Whitebox.getInternalState(proxy, NUM_SQL_ERRORS_FIELD);
+        int actualExceptionHappenedTimes = Whitebox.getInternalState(proxy, NUM_SQL_ERRORS_FIELD);
         Assert.assertEquals(expectedExceptionHappenedTimes, actualExceptionHappenedTimes);
         return method.invoke(proxy, args);
       });

@@ -46,7 +46,6 @@ import com.streamsets.pipeline.stage.origin.jdbc.cdc.ChangeTypeValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
 import com.zaxxer.hikari.HikariDataSource;
-import jdk.management.resource.internal.FutureWrapper;
 import net.jcip.annotations.GuardedBy;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.io.FileUtils;

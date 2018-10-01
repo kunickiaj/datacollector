@@ -24,9 +24,13 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.lib.jdbc.*;
+import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JDBCOperationType;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
+import com.streamsets.pipeline.lib.jdbc.JdbcMultiRowRecordWriter;
+import com.streamsets.pipeline.lib.jdbc.PreparedStatementCache;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
-import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -40,7 +44,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -841,7 +844,7 @@ public class TestJdbcTarget {
       ResultSet rs = statement.executeQuery("SELECT * FROM TEST.DATETIMES WHERE P_ID = 1");
       assertTrue(rs.next());
       assertEquals(new SimpleDateFormat("HH:mm:ss").format(d), rs.getTime(2).toString());
-      assertEquals(new SimpleDateFormat("YYY-MM-dd").format(d), rs.getDate(3).toString());
+      assertEquals(new SimpleDateFormat("yyyy-MM-dd").format(d), rs.getDate(3).toString());
       assertEquals(d, rs.getTimestamp(4));
       assertFalse(rs.next());
     }

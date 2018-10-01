@@ -255,6 +255,12 @@
       <version>${mockserver.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-reflect</artifactId>
+      <version>1.7.4</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

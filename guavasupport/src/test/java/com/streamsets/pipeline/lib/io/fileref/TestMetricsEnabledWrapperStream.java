@@ -19,14 +19,13 @@ import com.codahale.metrics.Counter;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Meter;
 import com.streamsets.pipeline.api.FileRef;
-import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Stage;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 
 import java.io.File;
 import java.io.InputStream;
@@ -79,11 +78,11 @@ public class TestMetricsEnabledWrapperStream {
   }
 
   private <T extends  AutoCloseable> long getRemainingBytes(T stream) {
-    return ((Counter)Whitebox.getInternalState(stream, "remainingBytesCounter")).getCount();
+    return ((Counter) Whitebox.getInternalState(stream, "remainingBytesCounter")).getCount();
   }
 
   private <T extends  AutoCloseable> long getSentBytes(T stream) {
-    return ((Counter)Whitebox.getInternalState(stream, "sentBytesCounter")).getCount();
+    return ((Counter) Whitebox.getInternalState(stream, "sentBytesCounter")).getCount();
   }
 
   private <T extends AutoCloseable> void checkStateDuringReads(long fileSize, long remainingFileSize, T is) {

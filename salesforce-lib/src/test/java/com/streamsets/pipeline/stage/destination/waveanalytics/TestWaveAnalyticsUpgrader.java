@@ -18,7 +18,6 @@ package com.streamsets.pipeline.stage.destination.waveanalytics;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
-import com.streamsets.pipeline.lib.salesforce.SubscriptionType;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -27,8 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.streamsets.pipeline.lib.waveanalytics.WaveAnalyticsConfigBean.APPEND_TIMESTAMP;
-import static com.streamsets.pipeline.stage.destination.waveanalytics.WaveAnalyticsDTarget
-    .WAVE_ANALYTICS_DESTINATION_CONFIG_BEAN_PREFIX;
+import static com.streamsets.pipeline.stage.destination.waveanalytics.WaveAnalyticsDTarget.WAVE_ANALYTICS_DESTINATION_CONFIG_BEAN_PREFIX;
 
 public class TestWaveAnalyticsUpgrader {
   private static final String WAVE_ANALYTICS_APPEND_TIMESTAMP = WAVE_ANALYTICS_DESTINATION_CONFIG_BEAN_PREFIX + "." + APPEND_TIMESTAMP;
@@ -49,6 +47,7 @@ public class TestWaveAnalyticsUpgrader {
     Assert.assertEquals(true, config.getValue());
   }
 
+  @Test
   public void testUpgradeV1toV2AppendTimestampTrue() throws StageException {
     List<Config> configs = new ArrayList<>();
     StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
@@ -66,6 +65,7 @@ public class TestWaveAnalyticsUpgrader {
     Assert.assertEquals(true, config.getValue());
   }
 
+  @Test
   public void testUpgradeV1toV2AppendTimestampFalse() throws StageException {
     List<Config> configs = new ArrayList<>();
     StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);

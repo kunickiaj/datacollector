@@ -18,7 +18,7 @@ package com.streamsets.pipeline.lib.io;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,7 +120,7 @@ public class TestDirectoryPathCreationWatcher {
     Thread.sleep(paths.size() * 1000);
 
     Set<Path> foundPaths = watcher.find();
-    checkCorrectness(paths, foundPaths, (ScheduledExecutorService)Whitebox.getInternalState(watcher, "executor"));
+    checkCorrectness(paths, foundPaths, (ScheduledExecutorService) Whitebox.getInternalState(watcher, "executor"));
   }
 
   @Test

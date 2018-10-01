@@ -281,6 +281,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
           System.err.println("  --> Returning stream from local");
         }
         try {
+          System.err.println("url: " + url.toString());
           return url.openStream();
         } catch (IOException e) {
           // Ignore

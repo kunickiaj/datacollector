@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
@@ -29,8 +30,8 @@ import com.streamsets.pipeline.config.OnParseError;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.Offset;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
-import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
+import com.streamsets.pipeline.sdk.PushSourceRunner;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -366,7 +367,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     }
   }
 
-  //@Test(expected = StageException.class)
+  @Test(expected = StageException.class) @Ignore
   public void testOnErrorPipelineIOEx() throws Exception {
     SpoolDirSource source = createSourceIOEx();
     PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source).addOutputLane("lane")

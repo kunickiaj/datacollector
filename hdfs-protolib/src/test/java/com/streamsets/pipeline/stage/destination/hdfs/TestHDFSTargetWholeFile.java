@@ -42,12 +42,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -114,7 +114,7 @@ public class TestHDFSTargetWholeFile {
     Assert.assertEquals(1, issues.size());
     Assert.assertEquals(
         Errors.HADOOPFS_53.name(),
-        ((ErrorMessage)Whitebox.getInternalState(issues.get(0), "message")).getErrorCode()
+        ((ErrorMessage) Whitebox.getInternalState(issues.get(0), "message")).getErrorCode()
     );
   }
 

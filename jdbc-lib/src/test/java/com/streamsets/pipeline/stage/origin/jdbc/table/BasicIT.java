@@ -43,7 +43,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -716,7 +716,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
     Assert.assertEquals(1, configIssues.size());
     Assert.assertEquals(
         JdbcErrors.JDBC_73.getCode(),
-        ((ErrorMessage)Whitebox.getInternalState(configIssues.get(0), "message")).getErrorCode()
+        ((ErrorMessage) Whitebox.getInternalState(configIssues.get(0), "message")).getErrorCode()
     );
   }
 

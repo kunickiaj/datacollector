@@ -31,7 +31,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.HttpUrlConnectorProvider;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;

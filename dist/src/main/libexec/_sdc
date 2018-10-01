@@ -168,7 +168,7 @@ fi
 
 if [ "${SDC_GC_LOGGING}" = "true" ]
 then
-  SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -XX:+PrintGCDetails -XX:+PrintGCDateStamps -Xloggc:${SDC_LOG}/gc.log"
+  SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -XX:+PrintGCDetails -Xloggc:${SDC_LOG}/gc.log"
 fi
 
 SDC_POLICY_FILE=""

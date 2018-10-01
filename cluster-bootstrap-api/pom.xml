@@ -149,16 +149,16 @@
               <goal>testCompile</goal>
             </goals>
           </execution>
-          <execution>
-            <id>attach-scaladocs</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>doc-jar</goal>
-            </goals>
-          </execution>
+          <!--<execution>-->
+            <!--<id>attach-scaladocs</id>-->
+            <!--<phase>verify</phase>-->
+            <!--<goals>-->
+              <!--<goal>doc-jar</goal>-->
+            <!--</goals>-->
+          <!--</execution>-->
         </executions>
         <configuration>
-          <scalaVersion>2.11.8</scalaVersion>
+          <scalaVersion>2.11.12</scalaVersion>
           <recompileMode>incremental</recompileMode>
           <useZincServer>true</useZincServer>
           <args>

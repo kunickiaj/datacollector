@@ -35,7 +35,7 @@
   <properties>
     <hadoop.version>2.7.3.2.6.2.1-1</hadoop.version>
     <hbase.version>1.1.2.2.6.2.1-1</hbase.version>
-    <scala.version>2.11.11</scala.version>
+    <scala.version>2.11.12</scala.version>
     <kafka.version>0.10.1.2.6.2.1-1</kafka.version>
     <spark.version>2.1.0.2.6.0.45-1</spark.version>
     <zk-client.version>0.5-1</zk-client.version>
@@ -353,7 +353,7 @@
     </dependency>
     <dependency>
       <groupId>org.powermock</groupId>
-      <artifactId>powermock-api-mockito</artifactId>
+      <artifactId>powermock-api-mockito2</artifactId>
       <version>${powermock.version}</version>
       <scope>test</scope>
     </dependency>

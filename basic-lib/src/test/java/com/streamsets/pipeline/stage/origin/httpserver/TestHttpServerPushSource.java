@@ -32,7 +32,7 @@ import org.apache.commons.io.IOUtils;
 import org.awaitility.Duration;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.powermock.reflect.Whitebox;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -137,7 +137,7 @@ public class TestHttpServerPushSource {
       });
 
       // wait for the HTTP server up and running
-      HttpReceiverServer httpServer = (HttpReceiverServer)Whitebox.getInternalState(source, "server");
+      HttpReceiverServer httpServer = (HttpReceiverServer) Whitebox.getInternalState(source, "server");
       await().atMost(Duration.TEN_SECONDS).until(isServerRunning(httpServer));
 
 
