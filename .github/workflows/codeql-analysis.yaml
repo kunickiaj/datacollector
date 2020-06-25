@@ -29,7 +29,7 @@ jobs:
         
     - run: |
         cd datacollector-api
-        mvn clean install -DskipTests
+        mvn clean install -DskipTests -Drat.skip -DskipRat
         
     - name: Checkout plugin API
       uses: actions/checkout@v2
@@ -40,7 +40,7 @@ jobs:
                 
     - run: |
         cd datacollector-plugin-api
-        mvn clean install -DskipTests
+        mvn clean install -DskipTests -Drat.skip -DskipRat
 
     # If this run was triggered by a pull request event, then checkout
     # the head of the pull request instead of the merge commit.
