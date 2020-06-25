@@ -56,16 +56,18 @@ jobs:
       with:
         languages: javascript, java
 
-    # ℹ️ Command-line programs to run using the OS shell.
-    # 📚 https://git.io/JvXDl
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v1.4.2
+      with:
+        node-version: 12.x
 
-    # ✏️ If the Autobuild fails above, remove it and uncomment the following three lines
-    #    and modify them (or add more) to build your code if your project
-    #    uses a compiled language
+    - name: Setup frontend build tools
+      run: |
+        npm install -g bower grunt-cli
 
     - name: Build SDC
       run: |
-       mvn -Pdist,ui -DskipTests -Drat.skip -DskipRat
+       mvn package -Pdist,ui -DskipTests -Drat.skip -DskipRat
       working-directory: ./datacollector
 
     - name: Perform CodeQL Analysis
