@@ -28,7 +28,7 @@ jobs:
         path: datacollector-api
         
     - name: Build API
-      run: mvn -B clean install -DskipTests -Drat.skip -DskipRat
+      run: mvn --no-transfer-progress clean install -DskipTests -Drat.skip -DskipRat
       working-directory: ./datacollector-api
         
     - name: Checkout plugin API
@@ -39,7 +39,7 @@ jobs:
         path: datacollector-plugin-api
                 
     - name: Build Plugin API
-      run: mvn -B clean install -DskipTests -Drat.skip -DskipRat
+      run: mvn --no-transfer-progress clean install -DskipTests -Drat.skip -DskipRat
       working-directory: ./datacollector-plugin-api
 
     # If this run was triggered by a pull request event, then checkout
@@ -67,7 +67,7 @@ jobs:
 
     - name: Build SDC
       run: |
-       mvn -B package -Pdist,ui -DskipTests -Drat.skip -DskipRat
+       mvn --no-transfer-progress package -Pdist,ui -DskipTests -Drat.skip -DskipRat
       working-directory: ./datacollector
 
     - name: Perform CodeQL Analysis
