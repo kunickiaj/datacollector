@@ -30,8 +30,8 @@ jobs:
     - run: |
         ls -l
         echo $PWD
-        cd datacollector-api
         mvn clean install -DskipTests -Drat.skip -DskipRat
+      working-directory: ./datacollector-api
         
     - name: Checkout plugin API
       uses: actions/checkout@v2
@@ -41,8 +41,8 @@ jobs:
         path: datacollector-plugin-api
                 
     - run: |
-        cd datacollector-plugin-api
         mvn clean install -DskipTests -Drat.skip -DskipRat
+      working-directory: ./datacollector-plugin-api
 
     # If this run was triggered by a pull request event, then checkout
     # the head of the pull request instead of the merge commit.
@@ -66,9 +66,8 @@ jobs:
     #    uses a compiled language
 
     - run: |
-       echo $PWD
-       cd datacollector
        mvn -Pdist,ui -DskipTests -Drat.skip -DskipRat
+      working-directory: ./datacollector
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
