@@ -23,27 +23,23 @@ jobs:
     - name: Checkout API
       uses: actions/checkout@v2
       with:
-        name: streamsets/datacollector-api
+        repository: streamsets/datacollector-api
         ref: refs/heads/master
         path: datacollector-api
         
     - name: Build API
-      run: |
-        ls -l
-        echo $PWD
-        mvn clean install -DskipTests -Drat.skip -DskipRat
+      run: mvn clean install -DskipTests -Drat.skip -DskipRat
       working-directory: ./datacollector-api
         
     - name: Checkout plugin API
       uses: actions/checkout@v2
       with:
-        name: streamsets/datacollector-plugin-api
+        repository: streamsets/datacollector-plugin-api
         ref: refs/heads/master
         path: datacollector-plugin-api
                 
     - name: Build Plugin API
-      run: |
-        mvn clean install -DskipTests -Drat.skip -DskipRat
+      run: mvn clean install -DskipTests -Drat.skip -DskipRat
       working-directory: ./datacollector-plugin-api
 
     # If this run was triggered by a pull request event, then checkout
