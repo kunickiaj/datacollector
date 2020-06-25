@@ -27,7 +27,8 @@ jobs:
         ref: refs/heads/master
         path: datacollector-api
         
-    - run: |
+    - name: Build API
+      run: |
         ls -l
         echo $PWD
         mvn clean install -DskipTests -Drat.skip -DskipRat
@@ -40,16 +41,17 @@ jobs:
         ref: refs/heads/master
         path: datacollector-plugin-api
                 
-    - run: |
+    - name: Build Plugin API
+      run: |
         mvn clean install -DskipTests -Drat.skip -DskipRat
       working-directory: ./datacollector-plugin-api
 
     # If this run was triggered by a pull request event, then checkout
     # the head of the pull request instead of the merge commit.
     - run: |
-        cd datacollector
         git checkout HEAD^2
       if: ${{ github.event_name == 'pull_request' }}
+      working-directory: ./datacollector
       
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
@@ -65,7 +67,8 @@ jobs:
     #    and modify them (or add more) to build your code if your project
     #    uses a compiled language
 
-    - run: |
+    - name: Build SDC
+      run: |
        mvn -Pdist,ui -DskipTests -Drat.skip -DskipRat
       working-directory: ./datacollector
 
