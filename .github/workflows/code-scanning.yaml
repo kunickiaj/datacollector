@@ -1,0 +1,73 @@
+name: "Code scanning - action"
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  CodeQL-Build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        # We must fetch at least the immediate parents so that if this is
+        # a pull request then we can checkout the head.
+        fetch-depth: 2
+        path: datacollector
+
+    - name: Checkout API
+      uses: actions/checkout@v2
+      with:
+        repository: streamsets/datacollector-api
+        ref: refs/heads/master
+        path: datacollector-api
+
+    - name: Build API
+      run: mvn --no-transfer-progress clean install -DskipTests -Drat.skip -DskipRat
+      working-directory: ./datacollector-api
+
+    - name: Checkout plugin API
+      uses: actions/checkout@v2
+      with:
+        repository: streamsets/datacollector-plugin-api
+        ref: refs/heads/master
+        path: datacollector-plugin-api
+
+    - name: Build Plugin API
+      run: mvn --no-transfer-progress clean install -DskipTests -Drat.skip -DskipRat
+      working-directory: ./datacollector-plugin-api
+
+    # If this run was triggered by a pull request event, then checkout
+    # the head of the pull request instead of the merge commit.
+    - run: |
+        git checkout HEAD^2
+      if: ${{ github.event_name == 'pull_request' }}
+      working-directory: ./datacollector
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      # Override language selection by uncommenting this and choosing your languages
+      with:
+        languages: javascript, java
+
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v1.4.2
+      with:
+        node-version: 12.x
+
+    - name: Setup frontend build tools
+      run: |
+        npm install -g bower grunt-cli
+    - name: Build SDC
+      env:
+        MAVEN_OPTS: -Dmaven.wagon.httpconnectionManager.ttlSeconds=25 -Dmaven.wagon.http.retryHandler.count=3
+      run: |
+       mvn --no-transfer-progress package -Pdist,ui -DskipTests -Drat.skip -DskipRat
+      working-directory: ./datacollector
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
