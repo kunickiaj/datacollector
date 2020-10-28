@@ -59,12 +59,15 @@ jobs:
       with:
         node-version: 12.x
 
+    - name: Setup Java environment
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11'
+
     - name: Setup frontend build tools
       run: |
         npm install -g bower grunt-cli
     - name: Build SDC
-      env:
-        MAVEN_OPTS: -Dmaven.wagon.httpconnectionManager.ttlSeconds=25 -Dmaven.wagon.http.retryHandler.count=3
       run: |
        mvn --no-transfer-progress package -Pdist,ui -DskipTests -Drat.skip -DskipRat
       working-directory: ./datacollector
