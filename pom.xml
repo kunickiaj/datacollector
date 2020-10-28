@@ -982,7 +982,7 @@
     </repository>
     <repository>
       <id>mapr-releases</id>
-      <url>http://repository.mapr.com/maven/</url>
+      <url>https://repository.mapr.com/maven/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
