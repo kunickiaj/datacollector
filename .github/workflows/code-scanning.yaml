@@ -69,6 +69,7 @@ jobs:
         npm install -g bower grunt-cli
     - name: Build SDC
       run: |
+       mvn -version
        mvn -B --no-transfer-progress package -Pdist,ui -DskipTests -Drat.skip -DskipRat
       working-directory: ./datacollector
 
