@@ -64,14 +64,28 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: '1.8'
-
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
     - name: Setup frontend build tools
       run: |
         npm install -g bower grunt-cli
+    - name: Cache Node.js modules
+      uses: actions/cache@v2
+      with:
+        # npm cache files are stored in `~/.npm` on Linux/macOS
+        path: ~/.npm
+        key: ${{ runner.OS }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.OS }}-node-
+          ${{ runner.OS }}-
     - name: Build SDC
       run: |
        mvn -version
-       mvn -B --no-transfer-progress package -Pall-libs,ui -DskipTests -Drat.skip -DskipRat
+       mvn -V -e -Dfindbugs.skip -Dcheckstyle.skip -Dpmd.skip=true -Denforcer.skip -Dmaven.javadoc.skip -DskipTests -Dmaven.test.skip.exec -Dlicense.skip=true -Drat.skip=true --no-transfer-progress package -Pall-libs,ui -DskipRat
       working-directory: ./datacollector
 
     - name: Perform CodeQL Analysis
