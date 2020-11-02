@@ -8,7 +8,7 @@ on:
 jobs:
   CodeQL-Build:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - name: Checkout repository
@@ -26,16 +26,28 @@ jobs:
         ref: refs/heads/master
         path: datacollector-api
 
-    - name: Build API
-      run: mvn --no-transfer-progress clean install -DskipTests -Drat.skip -DskipRat
-      working-directory: ./datacollector-api
-
     - name: Checkout plugin API
       uses: actions/checkout@v2
       with:
         repository: streamsets/datacollector-plugin-api
         ref: refs/heads/master
         path: datacollector-plugin-api
+
+    - name: Setup Java environment
+      uses: actions/setup-java@v1
+      with:
+        java-version: '1.8'
+
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Build API
+      run: mvn --no-transfer-progress clean install -DskipTests -Drat.skip -DskipRat
+      working-directory: ./datacollector-api
 
     - name: Build Plugin API
       run: mvn --no-transfer-progress clean install -DskipTests -Drat.skip -DskipRat
@@ -60,19 +72,10 @@ jobs:
       with:
         node-version: 12.x
 
-    - name: Setup Java environment
-      uses: actions/setup-java@v1
-      with:
-        java-version: '1.8'
-    - name: Cache Maven packages
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
     - name: Setup frontend build tools
       run: |
         npm install -g bower grunt-cli
+
     - name: Cache Node.js modules
       uses: actions/cache@v2
       with:
