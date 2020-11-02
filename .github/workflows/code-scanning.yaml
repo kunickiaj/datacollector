@@ -71,7 +71,7 @@ jobs:
     - name: Build SDC
       run: |
        mvn -version
-       mvn -B --no-transfer-progress package -Pdist,ui -DskipTests -Drat.skip -DskipRat
+       mvn -B --no-transfer-progress package -Pall-libs,ui -DskipTests -Drat.skip -DskipRat
       working-directory: ./datacollector
 
     - name: Perform CodeQL Analysis
