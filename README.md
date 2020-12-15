@@ -1,3 +1,5 @@
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkunickiaj%2Fdatacollector.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkunickiaj%2Fdatacollector?ref=badge_shield)
+
 <!---
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -55,3 +57,6 @@ We welcome contributors, please check out our [guidelines](CONTRIBUTING.md) to g
 Changelog
 ----------
 See the latest [changelog](https://streamsets.com/documentation/datacollector/latest/help/index.html#WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy)
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkunickiaj%2Fdatacollector.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkunickiaj%2Fdatacollector?ref=badge_large)
